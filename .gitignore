@@ -19,6 +19,7 @@
 [Bb]in/
 [Oo]bj/
 [Ll]og/
+obj/[Dd]ebug/
 #
 ## Visual Studio 2015 cache/options directory
 .vs/
