@@ -44,6 +44,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Core.3.3.0\lib\net45\Castle.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Castle.Windsor, Version=3.4.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Windsor.3.4.0\lib\net45\Castle.Windsor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.AI.Agent.Intercept, Version=2.0.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.2.0.6\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
       <Private>True</Private>
@@ -201,6 +209,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Installer\ServiceInstaller.cs" />
+    <Compile Include="IOC\ControllerFactory .cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -276,6 +286,20 @@
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JJServicios.DB.Impl\JJServicios.DB.Impl.csproj">
+      <Project>{e0be4535-d66a-470c-a219-1f9d136cfe2d}</Project>
+      <Name>JJServicios.DB.Impl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JJServicios.DB.Interface\JJServicios.DB.Contracts.csproj">
+      <Project>{bb4d36b3-6a21-400a-a74e-15f3c761dc00}</Project>
+      <Name>JJServicios.DB.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JJServicios.Models\JJServicios.Models.csproj">
+      <Project>{9e6bbf21-e0dd-46f9-bcde-afaf986fd10b}</Project>
+      <Name>JJServicios.Models</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
