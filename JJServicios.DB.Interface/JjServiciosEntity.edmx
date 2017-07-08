@@ -1,0 +1,943 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="JJServiciosModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Agent">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="UpdateDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Identification" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="FinancialNumber" Type="bigint" Nullable="false" />
+          <Property Name="Mobile" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="OtherPhone" Type="nvarchar" MaxLength="20" />
+          <Property Name="WhatsApp" Type="nvarchar" MaxLength="20" />
+          <Property Name="Skype" Type="nvarchar" MaxLength="50" />
+          <Property Name="CorporateEmail" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="OtherEmail" Type="nvarchar" MaxLength="50" />
+          <Property Name="ResidenceCity" Type="nvarchar" MaxLength="50" />
+          <Property Name="Address" Type="nvarchar" MaxLength="50" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="Birthdate" Type="date" />
+          <Property Name="EmployeePositionId" Type="bigint" Nullable="false" />
+          <Property Name="FinancialAccountId" Type="bigint" Nullable="false" />
+          <Property Name="AgentId" Type="bigint" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="UpdateDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EmployeePosition">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="AgentId" Type="bigint" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="UpdateDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Expense">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Amount" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="Observations" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="MovementTypeId" Type="bigint" Nullable="false" />
+          <Property Name="AgentId" Type="bigint" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="UpdateDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FinancialAccount">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="AgentId" Type="bigint" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="UpdateDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Income">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Amount" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="Observations" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="MovementTypeId" Type="bigint" Nullable="false" />
+          <Property Name="AgentId" Type="bigint" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="UpdateDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MovementType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="AgentId" Type="bigint" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="UpdateDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PaymentEmployee">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="City" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="EmployeeId" Type="bigint" Nullable="false" />
+          <Property Name="Amount" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="Observations" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Support" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="AgentId" Type="bigint" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="UpdateDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ServiceMovement">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="City" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="STFRequirement" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Amount" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="Observations" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Support" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="MovementTypeId" Type="bigint" Nullable="false" />
+          <Property Name="EmployeeId" Type="bigint" Nullable="false" />
+          <Property Name="AgentId" Type="bigint" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="UpdateDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Employee_Agent">
+          <End Role="Agent" Type="Self.Agent" Multiplicity="1" />
+          <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agent">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="AgentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Employee_EmployeePosition">
+          <End Role="EmployeePosition" Type="Self.EmployeePosition" Multiplicity="1" />
+          <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EmployeePosition">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="EmployeePositionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Employee_FinancialAccount">
+          <End Role="FinancialAccount" Type="Self.FinancialAccount" Multiplicity="1" />
+          <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FinancialAccount">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="FinancialAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EmployeePosition_Agent1">
+          <End Role="Agent" Type="Self.Agent" Multiplicity="1" />
+          <End Role="EmployeePosition" Type="Self.EmployeePosition" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agent">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EmployeePosition">
+              <PropertyRef Name="AgentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Expense_Agent">
+          <End Role="Agent" Type="Self.Agent" Multiplicity="1" />
+          <End Role="Expense" Type="Self.Expense" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agent">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Expense">
+              <PropertyRef Name="AgentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Expense_MovementType">
+          <End Role="MovementType" Type="Self.MovementType" Multiplicity="1" />
+          <End Role="Expense" Type="Self.Expense" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MovementType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Expense">
+              <PropertyRef Name="MovementTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FinancialAccount_Agent">
+          <End Role="Agent" Type="Self.Agent" Multiplicity="1" />
+          <End Role="FinancialAccount" Type="Self.FinancialAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agent">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FinancialAccount">
+              <PropertyRef Name="AgentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Income_Agent">
+          <End Role="Agent" Type="Self.Agent" Multiplicity="1" />
+          <End Role="Income" Type="Self.Income" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agent">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Income">
+              <PropertyRef Name="AgentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Income_MovementType">
+          <End Role="MovementType" Type="Self.MovementType" Multiplicity="1" />
+          <End Role="Income" Type="Self.Income" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MovementType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Income">
+              <PropertyRef Name="MovementTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MovementType_Agent">
+          <End Role="Agent" Type="Self.Agent" Multiplicity="1" />
+          <End Role="MovementType" Type="Self.MovementType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agent">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MovementType">
+              <PropertyRef Name="AgentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaymentEmployee_Agent">
+          <End Role="Agent" Type="Self.Agent" Multiplicity="1" />
+          <End Role="PaymentEmployee" Type="Self.PaymentEmployee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agent">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PaymentEmployee">
+              <PropertyRef Name="AgentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaymentEmployee_Employee">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+          <End Role="PaymentEmployee" Type="Self.PaymentEmployee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PaymentEmployee">
+              <PropertyRef Name="EmployeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServiceMovement_Agent">
+          <End Role="Agent" Type="Self.Agent" Multiplicity="1" />
+          <End Role="ServiceMovement" Type="Self.ServiceMovement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agent">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ServiceMovement">
+              <PropertyRef Name="AgentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServiceMovement_Employee">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+          <End Role="ServiceMovement" Type="Self.ServiceMovement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ServiceMovement">
+              <PropertyRef Name="EmployeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServiceMovement_MovementType">
+          <End Role="MovementType" Type="Self.MovementType" Multiplicity="1" />
+          <End Role="ServiceMovement" Type="Self.ServiceMovement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MovementType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ServiceMovement">
+              <PropertyRef Name="MovementTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="JJServiciosModelStoreContainer">
+          <EntitySet Name="Agent" EntityType="Self.Agent" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EmployeePosition" EntityType="Self.EmployeePosition" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Expense" EntityType="Self.Expense" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FinancialAccount" EntityType="Self.FinancialAccount" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Income" EntityType="Self.Income" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MovementType" EntityType="Self.MovementType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PaymentEmployee" EntityType="Self.PaymentEmployee" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ServiceMovement" EntityType="Self.ServiceMovement" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Employee_Agent" Association="Self.FK_Employee_Agent">
+            <End Role="Agent" EntitySet="Agent" />
+            <End Role="Employee" EntitySet="Employee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employee_EmployeePosition" Association="Self.FK_Employee_EmployeePosition">
+            <End Role="EmployeePosition" EntitySet="EmployeePosition" />
+            <End Role="Employee" EntitySet="Employee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employee_FinancialAccount" Association="Self.FK_Employee_FinancialAccount">
+            <End Role="FinancialAccount" EntitySet="FinancialAccount" />
+            <End Role="Employee" EntitySet="Employee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EmployeePosition_Agent1" Association="Self.FK_EmployeePosition_Agent1">
+            <End Role="Agent" EntitySet="Agent" />
+            <End Role="EmployeePosition" EntitySet="EmployeePosition" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Expense_Agent" Association="Self.FK_Expense_Agent">
+            <End Role="Agent" EntitySet="Agent" />
+            <End Role="Expense" EntitySet="Expense" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Expense_MovementType" Association="Self.FK_Expense_MovementType">
+            <End Role="MovementType" EntitySet="MovementType" />
+            <End Role="Expense" EntitySet="Expense" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FinancialAccount_Agent" Association="Self.FK_FinancialAccount_Agent">
+            <End Role="Agent" EntitySet="Agent" />
+            <End Role="FinancialAccount" EntitySet="FinancialAccount" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Income_Agent" Association="Self.FK_Income_Agent">
+            <End Role="Agent" EntitySet="Agent" />
+            <End Role="Income" EntitySet="Income" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Income_MovementType" Association="Self.FK_Income_MovementType">
+            <End Role="MovementType" EntitySet="MovementType" />
+            <End Role="Income" EntitySet="Income" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MovementType_Agent" Association="Self.FK_MovementType_Agent">
+            <End Role="Agent" EntitySet="Agent" />
+            <End Role="MovementType" EntitySet="MovementType" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentEmployee_Agent" Association="Self.FK_PaymentEmployee_Agent">
+            <End Role="Agent" EntitySet="Agent" />
+            <End Role="PaymentEmployee" EntitySet="PaymentEmployee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentEmployee_Employee" Association="Self.FK_PaymentEmployee_Employee">
+            <End Role="Employee" EntitySet="Employee" />
+            <End Role="PaymentEmployee" EntitySet="PaymentEmployee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServiceMovement_Agent" Association="Self.FK_ServiceMovement_Agent">
+            <End Role="Agent" EntitySet="Agent" />
+            <End Role="ServiceMovement" EntitySet="ServiceMovement" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServiceMovement_Employee" Association="Self.FK_ServiceMovement_Employee">
+            <End Role="Employee" EntitySet="Employee" />
+            <End Role="ServiceMovement" EntitySet="ServiceMovement" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServiceMovement_MovementType" Association="Self.FK_ServiceMovement_MovementType">
+            <End Role="MovementType" EntitySet="MovementType" />
+            <End Role="ServiceMovement" EntitySet="ServiceMovement" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="JJServiciosModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Agent">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Employee" Relationship="Self.FK_Employee_Agent" FromRole="Agent" ToRole="Employee" />
+          <NavigationProperty Name="EmployeePosition" Relationship="Self.FK_EmployeePosition_Agent1" FromRole="Agent" ToRole="EmployeePosition" />
+          <NavigationProperty Name="Expense" Relationship="Self.FK_Expense_Agent" FromRole="Agent" ToRole="Expense" />
+          <NavigationProperty Name="FinancialAccount" Relationship="Self.FK_FinancialAccount_Agent" FromRole="Agent" ToRole="FinancialAccount" />
+          <NavigationProperty Name="Income" Relationship="Self.FK_Income_Agent" FromRole="Agent" ToRole="Income" />
+          <NavigationProperty Name="MovementType" Relationship="Self.FK_MovementType_Agent" FromRole="Agent" ToRole="MovementType" />
+          <NavigationProperty Name="PaymentEmployee" Relationship="Self.FK_PaymentEmployee_Agent" FromRole="Agent" ToRole="PaymentEmployee" />
+          <NavigationProperty Name="ServiceMovement" Relationship="Self.FK_ServiceMovement_Agent" FromRole="Agent" ToRole="ServiceMovement" />
+        </EntityType>
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Identification" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FinancialNumber" Type="Int64" Nullable="false" />
+          <Property Name="Mobile" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="OtherPhone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="WhatsApp" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Skype" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CorporateEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="OtherEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ResidenceCity" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="Birthdate" Type="DateTime" Precision="0" />
+          <Property Name="EmployeePositionId" Type="Int64" Nullable="false" />
+          <Property Name="FinancialAccountId" Type="Int64" Nullable="false" />
+          <Property Name="AgentId" Type="Int64" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Agent" Relationship="Self.FK_Employee_Agent" FromRole="Employee" ToRole="Agent" />
+          <NavigationProperty Name="EmployeePosition" Relationship="Self.FK_Employee_EmployeePosition" FromRole="Employee" ToRole="EmployeePosition" />
+          <NavigationProperty Name="FinancialAccount" Relationship="Self.FK_Employee_FinancialAccount" FromRole="Employee" ToRole="FinancialAccount" />
+          <NavigationProperty Name="PaymentEmployee" Relationship="Self.FK_PaymentEmployee_Employee" FromRole="Employee" ToRole="PaymentEmployee" />
+          <NavigationProperty Name="ServiceMovement" Relationship="Self.FK_ServiceMovement_Employee" FromRole="Employee" ToRole="ServiceMovement" />
+        </EntityType>
+        <EntityType Name="EmployeePosition">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AgentId" Type="Int64" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Agent" Relationship="Self.FK_EmployeePosition_Agent1" FromRole="EmployeePosition" ToRole="Agent" />
+          <NavigationProperty Name="Employee" Relationship="Self.FK_Employee_EmployeePosition" FromRole="EmployeePosition" ToRole="Employee" />
+        </EntityType>
+        <EntityType Name="Expense">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Amount" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="Observations" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MovementTypeId" Type="Int64" Nullable="false" />
+          <Property Name="AgentId" Type="Int64" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Agent" Relationship="Self.FK_Expense_Agent" FromRole="Expense" ToRole="Agent" />
+          <NavigationProperty Name="MovementType" Relationship="Self.FK_Expense_MovementType" FromRole="Expense" ToRole="MovementType" />
+        </EntityType>
+        <EntityType Name="FinancialAccount">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AgentId" Type="Int64" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Agent" Relationship="Self.FK_FinancialAccount_Agent" FromRole="FinancialAccount" ToRole="Agent" />
+          <NavigationProperty Name="Employee" Relationship="Self.FK_Employee_FinancialAccount" FromRole="FinancialAccount" ToRole="Employee" />
+        </EntityType>
+        <EntityType Name="Income">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Amount" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="Observations" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MovementTypeId" Type="Int64" Nullable="false" />
+          <Property Name="AgentId" Type="Int64" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Agent" Relationship="Self.FK_Income_Agent" FromRole="Income" ToRole="Agent" />
+          <NavigationProperty Name="MovementType" Relationship="Self.FK_Income_MovementType" FromRole="Income" ToRole="MovementType" />
+        </EntityType>
+        <EntityType Name="MovementType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AgentId" Type="Int64" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Agent" Relationship="Self.FK_MovementType_Agent" FromRole="MovementType" ToRole="Agent" />
+          <NavigationProperty Name="Expense" Relationship="Self.FK_Expense_MovementType" FromRole="MovementType" ToRole="Expense" />
+          <NavigationProperty Name="Income" Relationship="Self.FK_Income_MovementType" FromRole="MovementType" ToRole="Income" />
+          <NavigationProperty Name="ServiceMovement" Relationship="Self.FK_ServiceMovement_MovementType" FromRole="MovementType" ToRole="ServiceMovement" />
+        </EntityType>
+        <EntityType Name="PaymentEmployee">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="EmployeeId" Type="Int64" Nullable="false" />
+          <Property Name="Amount" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="Observations" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Support" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AgentId" Type="Int64" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Agent" Relationship="Self.FK_PaymentEmployee_Agent" FromRole="PaymentEmployee" ToRole="Agent" />
+          <NavigationProperty Name="Employee" Relationship="Self.FK_PaymentEmployee_Employee" FromRole="PaymentEmployee" ToRole="Employee" />
+        </EntityType>
+        <EntityType Name="ServiceMovement">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="STFRequirement" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Amount" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="Observations" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Support" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MovementTypeId" Type="Int64" Nullable="false" />
+          <Property Name="EmployeeId" Type="Int64" Nullable="false" />
+          <Property Name="AgentId" Type="Int64" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Agent" Relationship="Self.FK_ServiceMovement_Agent" FromRole="ServiceMovement" ToRole="Agent" />
+          <NavigationProperty Name="Employee" Relationship="Self.FK_ServiceMovement_Employee" FromRole="ServiceMovement" ToRole="Employee" />
+          <NavigationProperty Name="MovementType" Relationship="Self.FK_ServiceMovement_MovementType" FromRole="ServiceMovement" ToRole="MovementType" />
+        </EntityType>
+        <Association Name="FK_Employee_Agent">
+          <End Role="Agent" Type="Self.Agent" Multiplicity="1" />
+          <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agent">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="AgentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EmployeePosition_Agent1">
+          <End Role="Agent" Type="Self.Agent" Multiplicity="1" />
+          <End Role="EmployeePosition" Type="Self.EmployeePosition" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agent">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EmployeePosition">
+              <PropertyRef Name="AgentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Expense_Agent">
+          <End Role="Agent" Type="Self.Agent" Multiplicity="1" />
+          <End Role="Expense" Type="Self.Expense" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agent">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Expense">
+              <PropertyRef Name="AgentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FinancialAccount_Agent">
+          <End Role="Agent" Type="Self.Agent" Multiplicity="1" />
+          <End Role="FinancialAccount" Type="Self.FinancialAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agent">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FinancialAccount">
+              <PropertyRef Name="AgentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Income_Agent">
+          <End Role="Agent" Type="Self.Agent" Multiplicity="1" />
+          <End Role="Income" Type="Self.Income" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agent">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Income">
+              <PropertyRef Name="AgentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MovementType_Agent">
+          <End Role="Agent" Type="Self.Agent" Multiplicity="1" />
+          <End Role="MovementType" Type="Self.MovementType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agent">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MovementType">
+              <PropertyRef Name="AgentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaymentEmployee_Agent">
+          <End Role="Agent" Type="Self.Agent" Multiplicity="1" />
+          <End Role="PaymentEmployee" Type="Self.PaymentEmployee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agent">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PaymentEmployee">
+              <PropertyRef Name="AgentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServiceMovement_Agent">
+          <End Role="Agent" Type="Self.Agent" Multiplicity="1" />
+          <End Role="ServiceMovement" Type="Self.ServiceMovement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agent">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ServiceMovement">
+              <PropertyRef Name="AgentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Employee_EmployeePosition">
+          <End Role="EmployeePosition" Type="Self.EmployeePosition" Multiplicity="1" />
+          <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EmployeePosition">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="EmployeePositionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Employee_FinancialAccount">
+          <End Role="FinancialAccount" Type="Self.FinancialAccount" Multiplicity="1" />
+          <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FinancialAccount">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="FinancialAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaymentEmployee_Employee">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+          <End Role="PaymentEmployee" Type="Self.PaymentEmployee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PaymentEmployee">
+              <PropertyRef Name="EmployeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServiceMovement_Employee">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+          <End Role="ServiceMovement" Type="Self.ServiceMovement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ServiceMovement">
+              <PropertyRef Name="EmployeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Expense_MovementType">
+          <End Role="MovementType" Type="Self.MovementType" Multiplicity="1" />
+          <End Role="Expense" Type="Self.Expense" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MovementType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Expense">
+              <PropertyRef Name="MovementTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Income_MovementType">
+          <End Role="MovementType" Type="Self.MovementType" Multiplicity="1" />
+          <End Role="Income" Type="Self.Income" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MovementType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Income">
+              <PropertyRef Name="MovementTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServiceMovement_MovementType">
+          <End Role="MovementType" Type="Self.MovementType" Multiplicity="1" />
+          <End Role="ServiceMovement" Type="Self.ServiceMovement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MovementType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ServiceMovement">
+              <PropertyRef Name="MovementTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="JJServiciosEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Agent" EntityType="Self.Agent" />
+          <EntitySet Name="Employee" EntityType="Self.Employee" />
+          <EntitySet Name="EmployeePosition" EntityType="Self.EmployeePosition" />
+          <EntitySet Name="Expense" EntityType="Self.Expense" />
+          <EntitySet Name="FinancialAccount" EntityType="Self.FinancialAccount" />
+          <EntitySet Name="Income" EntityType="Self.Income" />
+          <EntitySet Name="MovementType" EntityType="Self.MovementType" />
+          <EntitySet Name="PaymentEmployee" EntityType="Self.PaymentEmployee" />
+          <EntitySet Name="ServiceMovement" EntityType="Self.ServiceMovement" />
+          <AssociationSet Name="FK_Employee_Agent" Association="Self.FK_Employee_Agent">
+            <End Role="Agent" EntitySet="Agent" />
+            <End Role="Employee" EntitySet="Employee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EmployeePosition_Agent1" Association="Self.FK_EmployeePosition_Agent1">
+            <End Role="Agent" EntitySet="Agent" />
+            <End Role="EmployeePosition" EntitySet="EmployeePosition" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Expense_Agent" Association="Self.FK_Expense_Agent">
+            <End Role="Agent" EntitySet="Agent" />
+            <End Role="Expense" EntitySet="Expense" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FinancialAccount_Agent" Association="Self.FK_FinancialAccount_Agent">
+            <End Role="Agent" EntitySet="Agent" />
+            <End Role="FinancialAccount" EntitySet="FinancialAccount" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Income_Agent" Association="Self.FK_Income_Agent">
+            <End Role="Agent" EntitySet="Agent" />
+            <End Role="Income" EntitySet="Income" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MovementType_Agent" Association="Self.FK_MovementType_Agent">
+            <End Role="Agent" EntitySet="Agent" />
+            <End Role="MovementType" EntitySet="MovementType" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentEmployee_Agent" Association="Self.FK_PaymentEmployee_Agent">
+            <End Role="Agent" EntitySet="Agent" />
+            <End Role="PaymentEmployee" EntitySet="PaymentEmployee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServiceMovement_Agent" Association="Self.FK_ServiceMovement_Agent">
+            <End Role="Agent" EntitySet="Agent" />
+            <End Role="ServiceMovement" EntitySet="ServiceMovement" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employee_EmployeePosition" Association="Self.FK_Employee_EmployeePosition">
+            <End Role="EmployeePosition" EntitySet="EmployeePosition" />
+            <End Role="Employee" EntitySet="Employee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employee_FinancialAccount" Association="Self.FK_Employee_FinancialAccount">
+            <End Role="FinancialAccount" EntitySet="FinancialAccount" />
+            <End Role="Employee" EntitySet="Employee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentEmployee_Employee" Association="Self.FK_PaymentEmployee_Employee">
+            <End Role="Employee" EntitySet="Employee" />
+            <End Role="PaymentEmployee" EntitySet="PaymentEmployee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServiceMovement_Employee" Association="Self.FK_ServiceMovement_Employee">
+            <End Role="Employee" EntitySet="Employee" />
+            <End Role="ServiceMovement" EntitySet="ServiceMovement" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Expense_MovementType" Association="Self.FK_Expense_MovementType">
+            <End Role="MovementType" EntitySet="MovementType" />
+            <End Role="Expense" EntitySet="Expense" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Income_MovementType" Association="Self.FK_Income_MovementType">
+            <End Role="MovementType" EntitySet="MovementType" />
+            <End Role="Income" EntitySet="Income" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServiceMovement_MovementType" Association="Self.FK_ServiceMovement_MovementType">
+            <End Role="MovementType" EntitySet="MovementType" />
+            <End Role="ServiceMovement" EntitySet="ServiceMovement" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="JJServiciosModelStoreContainer" CdmEntityContainer="JJServiciosEntities">
+          <EntitySetMapping Name="Agent">
+            <EntityTypeMapping TypeName="JJServiciosModel.Agent">
+              <MappingFragment StoreEntitySet="Agent">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Employee">
+            <EntityTypeMapping TypeName="JJServiciosModel.Employee">
+              <MappingFragment StoreEntitySet="Employee">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Identification" ColumnName="Identification" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FinancialNumber" ColumnName="FinancialNumber" />
+                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+                <ScalarProperty Name="OtherPhone" ColumnName="OtherPhone" />
+                <ScalarProperty Name="WhatsApp" ColumnName="WhatsApp" />
+                <ScalarProperty Name="Skype" ColumnName="Skype" />
+                <ScalarProperty Name="CorporateEmail" ColumnName="CorporateEmail" />
+                <ScalarProperty Name="OtherEmail" ColumnName="OtherEmail" />
+                <ScalarProperty Name="ResidenceCity" ColumnName="ResidenceCity" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="Birthdate" ColumnName="Birthdate" />
+                <ScalarProperty Name="EmployeePositionId" ColumnName="EmployeePositionId" />
+                <ScalarProperty Name="FinancialAccountId" ColumnName="FinancialAccountId" />
+                <ScalarProperty Name="AgentId" ColumnName="AgentId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmployeePosition">
+            <EntityTypeMapping TypeName="JJServiciosModel.EmployeePosition">
+              <MappingFragment StoreEntitySet="EmployeePosition">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="AgentId" ColumnName="AgentId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Expense">
+            <EntityTypeMapping TypeName="JJServiciosModel.Expense">
+              <MappingFragment StoreEntitySet="Expense">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Observations" ColumnName="Observations" />
+                <ScalarProperty Name="MovementTypeId" ColumnName="MovementTypeId" />
+                <ScalarProperty Name="AgentId" ColumnName="AgentId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FinancialAccount">
+            <EntityTypeMapping TypeName="JJServiciosModel.FinancialAccount">
+              <MappingFragment StoreEntitySet="FinancialAccount">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="AgentId" ColumnName="AgentId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Income">
+            <EntityTypeMapping TypeName="JJServiciosModel.Income">
+              <MappingFragment StoreEntitySet="Income">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Observations" ColumnName="Observations" />
+                <ScalarProperty Name="MovementTypeId" ColumnName="MovementTypeId" />
+                <ScalarProperty Name="AgentId" ColumnName="AgentId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MovementType">
+            <EntityTypeMapping TypeName="JJServiciosModel.MovementType">
+              <MappingFragment StoreEntitySet="MovementType">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="AgentId" ColumnName="AgentId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PaymentEmployee">
+            <EntityTypeMapping TypeName="JJServiciosModel.PaymentEmployee">
+              <MappingFragment StoreEntitySet="PaymentEmployee">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Observations" ColumnName="Observations" />
+                <ScalarProperty Name="Support" ColumnName="Support" />
+                <ScalarProperty Name="AgentId" ColumnName="AgentId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ServiceMovement">
+            <EntityTypeMapping TypeName="JJServiciosModel.ServiceMovement">
+              <MappingFragment StoreEntitySet="ServiceMovement">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="STFRequirement" ColumnName="STFRequirement" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Observations" ColumnName="Observations" />
+                <ScalarProperty Name="Support" ColumnName="Support" />
+                <ScalarProperty Name="MovementTypeId" ColumnName="MovementTypeId" />
+                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+                <ScalarProperty Name="AgentId" ColumnName="AgentId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

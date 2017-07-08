@@ -1,20 +1,23 @@
-﻿using System.Web.Mvc;
-using JJServicios.DB.Interface;
+﻿using System.Linq;
+using System.Web.Mvc;
+using JJServicios.DB.Impl;
 
 namespace JJServicios.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IJjServiciosRepository _jjServiciosDbRepository;
+        private UnitOfWork _unit = new UnitOfWork();
 
-        public HomeController(IJjServiciosRepository  jjServiciosDbRepository)
+
+        public HomeController()
         {
-             _jjServiciosDbRepository = jjServiciosDbRepository;
+            var agents = _unit.AgentsRepository.Queryable().ToList();
+            var twoAgents = agents;
         }
 
         public ActionResult Index()
         {
-            return View(_jjServiciosDbRepository.GetEmployees());
+            return View();
         }
 
         public ActionResult About()
