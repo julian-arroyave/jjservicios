@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace JJServicios.DB.Interface
+namespace JJServicios.DB.Contracts
 {
     using System;
     using System.Data.Entity;

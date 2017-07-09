@@ -14,11 +14,8 @@
       })
       .Groupable()
       .Scrollable()
-      .Filterable()
-      .Sortable()
-      .Pageable()
       .DataSource(dataSource => dataSource
           .Ajax()
-          .Read(read => read.Action("Agent_Read", "Home"))
+          .Read(read => read.Action("Agent_Read", "Home").Type(HttpVerbs.Get))
       )
 )

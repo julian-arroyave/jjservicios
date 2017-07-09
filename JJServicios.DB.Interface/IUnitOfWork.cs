@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using JJServicios.DB.Contracts.Repositories;
 
-namespace JJServicios.DB.Interface
+namespace JJServicios.DB.Contracts
 {
-    interface UnitOfWork
+    public interface IUnitOfWork
     {
+        GenericRepository<Agent> AgentsRepository { get; }
+        GenericRepository<Employee> EmployeesRepository { get; }
     }
 }

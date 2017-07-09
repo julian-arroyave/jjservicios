@@ -1,18 +1,19 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
-using JJServicios.DB.Impl;
+using JJServicios.DB.Contracts;
+using JJServicios.Web.Models;
+using Kendo.Mvc.Extensions;
+using Kendo.Mvc.UI;
 
 namespace JJServicios.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private UnitOfWork _unit = new UnitOfWork();
+        private readonly IUnitOfWork _unitOfWork;
 
-
-        public HomeController()
+        public HomeController(IUnitOfWork unitOfWork)
         {
-            var agents = _unit.AgentsRepository.Queryable().ToList();
-            var twoAgents = agents;
+            _unitOfWork = unitOfWork;
         }
 
         public ActionResult Index()
@@ -20,18 +21,18 @@ namespace JJServicios.Web.Controllers
             return View();
         }
 
-        public ActionResult About()
+        
+        public ActionResult Agent_Read([DataSourceRequest]DataSourceRequest request)
         {
-            ViewBag.Message = "Your application description page.";
+            var agents = _unitOfWork.AgentsRepository.Queryable();
 
-            return View();
+            var agentlist = agents.Select(x => new {x.Password, x.Name, x.Id, x.Email}).ToList();
+
+            var agentsViewModel =
+                agentlist.Select(x => new AgentViewModel() {Name = x.Name, Email = x.Email, Password = x.Password, Id = x.Id}).ToList();
+
+            return Json(agentsViewModel.ToDataSourceResult(request));
         }
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
     }
 }

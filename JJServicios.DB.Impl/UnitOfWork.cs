@@ -1,18 +1,20 @@
-﻿using JJServicios.DB.Interface;
-using JJServicios.DB.Impl.Repositories;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using JJServicios.DB.Contracts;
+using JJServicios.DB.Contracts.Repositories;
 
 namespace JJServicios.DB.Impl
 {
-    public class UnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
+        private GenericRepository<Agent> _agentsRepository;
+        private GenericRepository<Employee> _employeessRepository;
+
         public UnitOfWork()
         {
             _context = new JJServiciosEntities();
         }
         private readonly JJServiciosEntities _context;
 
-        private GenericRepository<Agent> _agentsRepository;
         public GenericRepository<Agent> AgentsRepository
         {
             get
@@ -24,6 +26,20 @@ namespace JJServicios.DB.Impl
                 return _agentsRepository;
             }
         }
+
+        public GenericRepository<Employee> EmployeesRepository
+        {
+            get
+            {
+                if (_agentsRepository == null)
+                {
+                    _employeessRepository = new GenericRepository<Employee>(_context);
+                }
+                return _employeessRepository;
+            }
+        }
+
+
 
         public async Task SaveChangesAsync()
         {
