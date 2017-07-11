@@ -10,6 +10,7 @@ namespace JJServicios.Web.Controllers
     public class HomeController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private JJServiciosEntities db = new JJServiciosEntities();
 
         public HomeController(IUnitOfWork unitOfWork)
         {
@@ -32,6 +33,13 @@ namespace JJServicios.Web.Controllers
                 agentlist.Select(x => new AgentViewModel() {Name = x.Name, Email = x.Email, Password = x.Password, Id = x.Id}).ToList();
 
             return Json(agentsViewModel.ToDataSourceResult(request));
+        }
+
+        public ActionResult GetMovementTypes()
+        {
+            IQueryable<MovementType> movementsTypes = db.MovementType;
+
+            return Json(movementsTypes.Select(e => e.Name).Distinct(), JsonRequestBehavior.AllowGet);
         }
 
     }

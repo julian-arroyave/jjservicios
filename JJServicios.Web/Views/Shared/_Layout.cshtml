@@ -19,7 +19,7 @@
 	<script src="https://kendo.cdn.telerik.com/2017.2.621/js/kendo.aspnetmvc.min.js"></script>
 	<script src="@Url.Content("~/Scripts/kendo.modernizr.custom.js")"></script>
 </head>
-<body class="k-rtl">
+<body>
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -28,13 +28,14 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("J&J Admin", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    <li>@Html.ActionLink("Salidas", "Index", "Expense")</li>
+                    <li>@Html.ActionLink("Tipos de movimientos", "Index", "MovementType")</li> 
+                    <li>@Html.ActionLink("Cargos", "Index", "EmployeePosition")</li>
+                    <li>@Html.ActionLink("Cuentas financieras", "Index", "FinancialAccount")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
@@ -44,10 +45,18 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year - J & J Servicios Electrónicos e Informáticos</p>
         </footer>
     </div>
+    <script type="text/javascript">
 
+    function onSaveChanges(e) {
+        e.sender.one("dataBound", function() {
+            e.sender.dataSource.read();
+        });
+    };
+
+    </script>
     
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)

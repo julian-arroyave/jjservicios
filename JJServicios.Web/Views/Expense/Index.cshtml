@@ -1,0 +1,70 @@
+﻿@using JJServicios.Web.Models
+
+<h1>Salidas</h1>
+
+@(Html.Kendo().Grid<IncomeExpenseViewModel>()
+      .Name("grid")
+      .HtmlAttributes(new { style = "height:500px;" })
+      .Columns(columns =>
+      {
+          columns.Bound(c => c.Amount).Title("Cantidad");
+          columns.Bound(c => c.Observations).Title("Observaciones"); 
+          columns.Bound(c => c.MovementType).Title("Tipo de movimiento").Sortable(false).Filterable(filterable => filterable.Extra(false).UI("movementTypesFilter").Operators(operators => operators.ForString(str => str.Clear().Contains("Contiene")))
+              );
+          columns.Bound(c => c.CreatedDate).Hidden();
+          columns.Bound(c => c.UpdateDate).Title("Fecha de actualización").ClientTemplate("#=kendo.toString(UpdateDate,'yyyy-MM-dd h:mm:ss tt')#").Filterable(filterable => filterable.Extra(true).Operators(operators => operators.ForDate(str => str.Clear()
+          .IsGreaterThanOrEqualTo("Mayor o igual a")
+          .IsLessThanOrEqualTo("Menor o igual a"))));
+          columns.Command(command => { command.Edit(); command.Destroy(); }).Width(180);
+      })
+      .ToolBar(toolbar =>
+      {
+          toolbar.Create();
+          toolbar.Excel();
+      })
+      .Filterable()
+      .Editable(editable => editable.Mode(GridEditMode.InLine))
+      .Pageable()
+      .Selectable(selectable =>
+      {
+          selectable.Mode(GridSelectionMode.Single);
+          selectable.Type(GridSelectionType.Row);
+      })
+      .Sortable(sortable =>
+      {
+          sortable.SortMode(GridSortMode.SingleColumn);
+      })
+      .Scrollable()
+       .Events(events =>
+       {
+           events.SaveChanges("onSaveChanges");
+           events.Remove("onSaveChanges");
+           events.Save("onSaveChanges");
+           events.Edit("onSaveChanges");
+       })
+      .DataSource(dataSource => dataSource
+          .Ajax()
+          .Sort(sort => sort.Add("UpdateDate").Descending())
+          .Model(model =>
+          {
+              model.Id(p => p.Id);
+              model.Field(fld => fld.UpdateDate).Editable(false);
+          })
+          .Read(read => read.Action("Expense_Read", "Expense"))
+          .Create(create => create.Action("Expense_Create", "Expense"))
+          .Update(update => update.Action("Expense_Update", "Expense"))
+          .Destroy(destroy => destroy.Action("Expense_Destroy", "Expense"))
+      )
+      )
+
+<script type="text/javascript">
+    function movementTypesFilter(element) {
+        element.kendoAutoComplete({
+            dataSource: {
+                transport: {
+                    read: "@Url.Action("GetMovementTypes", "Ajax")"
+                }
+            }
+        });
+    }
+</script>

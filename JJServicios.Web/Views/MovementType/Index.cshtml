@@ -1,0 +1,28 @@
+﻿
+@(Html.Kendo().Grid<JJServicios.DB.Contracts.MovementType>()
+      .Name("grid")
+      .Columns(columns =>
+      {
+        columns.Bound(c => c.Name);
+        columns.Command(command => { command.Edit(); command.Destroy(); }).Width(180);
+      })
+      .ToolBar(toolbar => {
+            toolbar.Create();
+            toolbar.Excel();
+      })
+      .Editable(editable => editable.Mode(GridEditMode.InLine))
+      .Pageable()
+      .Sortable(sortable => {
+          sortable.SortMode(GridSortMode.SingleColumn);
+      })
+      .Filterable()
+      .Scrollable()
+      .DataSource(dataSource => dataSource
+          .Ajax()
+          .Model(model => model.Id(p => p.Id))
+          .Read(read => read.Action("MovementType_Read", "MovementType"))
+          .Create(create => create.Action("MovementType_Create", "MovementType"))
+          .Update(update => update.Action("MovementType_Update", "MovementType"))
+          .Destroy(destroy => destroy.Action("MovementType_Destroy", "MovementType"))
+      )
+)

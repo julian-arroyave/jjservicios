@@ -1,0 +1,57 @@
+﻿
+@(Html.Kendo().Grid<JJServicios.DB.Contracts.Expense>()
+      .Name("grid")
+      .Columns(columns =>
+      {
+        columns.Bound(c => c.Amount);
+        columns.Bound(c => c.Observations);
+        columns.Bound(c => c.CreatedDate);
+        columns.Bound(c => c.UpdateDate);
+        columns.Command(command => { command.Edit(); command.Destroy(); }).Width(180);
+      })
+      .ToolBar(toolbar => {
+            toolbar.Create();
+            toolbar.Excel();
+      })
+      .Editable(editable => editable.Mode(GridEditMode.InLine))
+      .Pageable()
+      .Sortable(sortable => {
+          sortable.SortMode(GridSortMode.SingleColumn);
+      })
+      .Filterable()
+      .Scrollable()
+      .Events(events => {
+            events.SaveChanges("onSaveChanges");
+            events.Remove("onRemove");
+            events.Save("onSave");
+            events.Edit("onEdit");
+      })
+      .DataSource(dataSource => dataSource
+          .Ajax()
+          .Model(model => model.Id(p => p.Id))
+          .Read(read => read.Action("Expense_Read", "Test"))
+          .Create(create => create.Action("Expense_Create", "Test"))
+          .Update(update => update.Action("Expense_Update", "Test"))
+          .Destroy(destroy => destroy.Action("Expense_Destroy", "Test"))
+      )
+)
+
+<script>
+
+    function onSaveChanges(e){
+        //Implement the event handler for SaveChanges
+    }
+
+    function onRemove(e){
+        //Implement the event handler for Remove
+    }
+
+    function onSave(e){
+        //Implement the event handler for Save
+    }
+
+    function onEdit(e){
+        //Implement the event handler for Edit
+    }
+
+</script>

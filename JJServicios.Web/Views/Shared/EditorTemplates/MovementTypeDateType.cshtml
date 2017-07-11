@@ -1,0 +1,13 @@
+@model string
+
+@{
+    var selectedList = (SelectList)ViewData["MovementTypes"];
+}
+@{
+    <select name="MovementTypeId">
+        @foreach (var item in selectedList)
+        {
+            <option value="@item.Value">@item.Text</option>
+        }
+    </select>
+}

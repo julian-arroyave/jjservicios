@@ -1,0 +1,31 @@
+﻿
+@(Html.Kendo().Grid<JJServicios.Web.Models.IncomeExpenseViewModel>()
+      .Name("grid")
+      .Columns(columns =>
+      {
+        columns.Bound(c => c.Amount);
+        columns.Bound(c => c.Observations);
+        columns.Bound(c => c.CreatedDate);
+        columns.Bound(c => c.UpdateDate);
+        columns.Command(command => { command.Edit(); command.Destroy(); }).Width(180);
+      })
+      .ToolBar(toolbar => {
+            toolbar.Create();
+            toolbar.Excel();
+      })
+      .Editable(editable => editable.Mode(GridEditMode.InLine))
+      .Pageable()
+      .Sortable(sortable => {
+          sortable.SortMode(GridSortMode.SingleColumn);
+      })
+      .Filterable()
+      .Scrollable()
+      .DataSource(dataSource => dataSource
+          .Ajax()
+          .Model(model => model.Id(p => p.Id))
+          .Read(read => read.Action("Income_Read", "Income"))
+          .Create(create => create.Action("Income_Create", "Income"))
+          .Update(update => update.Action("Income_Update", "Income"))
+          .Destroy(destroy => destroy.Action("Income_Destroy", "Income"))
+      )
+)

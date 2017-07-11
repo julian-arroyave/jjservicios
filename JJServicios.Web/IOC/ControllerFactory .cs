@@ -27,7 +27,7 @@ namespace JJServicios.Web.IOC
 
         protected override IController GetControllerInstance(System.Web.Routing.RequestContext requestContext, Type controllerType)
         {
-            return (IController)_container.Resolve(controllerType);
+         return (IController)_container.Resolve(controllerType);
         }
     }
 }

@@ -1,0 +1,28 @@
+﻿
+@(Html.Kendo().Grid<JJServicios.DB.Contracts.EmployeePosition>()
+      .Name("grid")
+      .Columns(columns =>
+      {
+        columns.Command(command => { command.Edit(); command.Destroy(); }).Width(50);
+        columns.Bound(c => c.Name).Title("Nombre de Agente").Width(180);
+      })
+      .ToolBar(toolbar => {
+            toolbar.Create();
+            toolbar.Excel();
+      })
+      .Editable(editable => editable.Mode(GridEditMode.InLine))
+      .Pageable()
+      .Sortable(sortable => {
+          sortable.SortMode(GridSortMode.SingleColumn);
+      })
+      .Filterable()
+      .Scrollable()
+      .DataSource(dataSource => dataSource
+          .Ajax()
+          .Model(model => model.Id(p => p.Id))
+          .Read(read => read.Action("EmployeePosition_Read", "EmployeePosition"))
+          .Create(create => create.Action("EmployeePosition_Create", "EmployeePosition"))
+          .Update(update => update.Action("EmployeePosition_Update", "EmployeePosition"))
+          .Destroy(destroy => destroy.Action("EmployeePosition_Destroy", "EmployeePosition"))
+      )
+)
