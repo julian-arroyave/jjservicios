@@ -21,14 +21,20 @@
       .Name("grid")
       .Columns(columns =>
       {
-          columns.Command(command => { command.Edit(); command.Destroy(); }).Width(180);
           columns.Bound(c => c.Name);
+          columns.Bound(c => c.UpdateDate).Width(90).Title("Fecha").ClientTemplate("#=kendo.toString(UpdateDate,'yyyy-MM-dd')#");
+          columns.Command(command =>
+          {
+              command.Edit()
+          .Text(" ").UpdateText(" ").CancelText(" ");
+              command.Destroy().Text(" ");
+          }).Width(160);
+
 
       })
       .ToolBar(toolbar =>
       {
-          toolbar.Create();
-          toolbar.Excel();
+          toolbar.Create().Text("Nuevo");
       })
       .Editable(editable => editable.Mode(GridEditMode.InLine))
       .Pageable()
@@ -40,7 +46,11 @@
       .Scrollable()
       .DataSource(dataSource => dataSource
           .Ajax()
-          .Model(model => model.Id(p => p.Id))
+          .Model(model =>
+          {
+              model.Id(p => p.Id);
+              model.Field(fld => fld.UpdateDate).Editable(false);
+          })
           .Read(read => read.Action("FinancialAccount_Read", "FinancialAccount"))
           .Update(update => update.Action("FinancialAccount_Update", "FinancialAccount"))
           .Destroy(destroy => destroy.Action("FinancialAccount_Destroy", "FinancialAccount"))

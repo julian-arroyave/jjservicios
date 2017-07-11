@@ -21,5 +21,12 @@ namespace JJServicios.Web.Controllers
 
             return Json(movementsTypes.Select(e => e.Name).Distinct(), JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult GetEmployees()
+        {
+            IQueryable<Employee> employees = db.Employee;
+
+            return Json(employees.Select(e => e.Name).Distinct(), JsonRequestBehavior.AllowGet);
+        }
     }
 }

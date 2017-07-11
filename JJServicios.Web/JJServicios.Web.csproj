@@ -216,6 +216,7 @@
     <Compile Include="Controllers\IncomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MovementTypeController.cs" />
+    <Compile Include="Controllers\ServiceMovementController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -224,9 +225,11 @@
     <Compile Include="IOC\ControllerFactory .cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AgentViewModel.cs" />
+    <Compile Include="Models\EmployeeViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\IncomeExpenseViewModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\ServiceMovementViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -310,6 +313,8 @@
     <Content Include="Views\Shared\EditorTemplates\MovementTypeDateType.cshtml" />
     <Content Include="Views\Income\Index.cshtml" />
     <Content Include="Views\Test\Index.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\EmployeeDataType.cshtml" />
+    <Content Include="Views\ServiceMovement\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

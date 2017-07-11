@@ -1,14 +1,20 @@
-﻿
+﻿<h1>Tipos de movimientos</h1>
+
 @(Html.Kendo().Grid<JJServicios.DB.Contracts.MovementType>()
       .Name("grid")
       .Columns(columns =>
       {
-        columns.Bound(c => c.Name);
-        columns.Command(command => { command.Edit(); command.Destroy(); }).Width(180);
+          columns.Bound(c => c.Name);
+          columns.Bound(c => c.UpdateDate).Width(90).Title("Fecha").ClientTemplate("#=kendo.toString(UpdateDate,'yyyy-MM-dd')#");
+          columns.Command(command =>
+          {
+              command.Edit()
+          .Text(" ").UpdateText(" ").CancelText(" ");
+              command.Destroy().Text(" ");
+          }).Width(160);
       })
       .ToolBar(toolbar => {
-            toolbar.Create();
-            toolbar.Excel();
+          toolbar.Create().Text("Nuevo");
       })
       .Editable(editable => editable.Mode(GridEditMode.InLine))
       .Pageable()
@@ -19,7 +25,11 @@
       .Scrollable()
       .DataSource(dataSource => dataSource
           .Ajax()
-          .Model(model => model.Id(p => p.Id))
+          .Model(model =>
+          {
+              model.Id(p => p.Id);
+              model.Field(fld => fld.UpdateDate).Editable(false);
+          })
           .Read(read => read.Action("MovementType_Read", "MovementType"))
           .Create(create => create.Action("MovementType_Create", "MovementType"))
           .Update(update => update.Action("MovementType_Update", "MovementType"))

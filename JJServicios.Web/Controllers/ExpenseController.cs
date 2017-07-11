@@ -1,5 +1,4 @@
 ﻿﻿using System;
-﻿using System.Collections.Generic;
 ﻿using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
@@ -13,18 +12,18 @@ namespace JJServicios.Web.Controllers
 {
     public class ExpenseController : Controller
     {
-        private JJServiciosEntities db = new JJServiciosEntities();
+        private readonly JJServiciosEntities _db = new JJServiciosEntities();
         
         public ActionResult Index()
         {
-            IQueryable<MovementType> movementTypes = db.MovementType;
+            IQueryable<MovementType> movementTypes = _db.MovementType;
             ViewData["MovementTypes"] = new SelectList(movementTypes, "Id", "Name");
             return View();
         }
 
         public ActionResult Expense_Read([DataSourceRequest]DataSourceRequest request)
         {
-            IQueryable<Expense> expenses = db.Expense;
+            IQueryable<Expense> expenses = _db.Expense;
             var result = GetExpensesDataResult(request, expenses);
             return Json(result);
         }
@@ -44,8 +43,8 @@ namespace JJServicios.Web.Controllers
                     MovementTypeId = expense.MovementTypeId
                 };
 
-                db.Expense.Add(entity);
-                db.SaveChanges();
+                _db.Expense.Add(entity);
+                _db.SaveChanges();
                 expense.Id = entity.Id;
             }
 
@@ -55,23 +54,9 @@ namespace JJServicios.Web.Controllers
 
         private DataSourceResult GetExpensesDataResult(DataSourceRequest request, IQueryable<Expense> expenses)
         {
-            IQueryable<MovementType> movementType = db.MovementType;
+            IQueryable<MovementType> movementType = _db.MovementType;
 
-            //expenses = expenses.Where(x => x.MovementType.Name.Contains("Impuesto"));
-
-            var rw = request.Filters.ToList();
-
-            IList<FilterDescriptor> filters = new List<FilterDescriptor>();
-            foreach (var f in rw)
-            {
-                var type = f.GetType();
-
-             MapMovementTypeName(request.Filters, f);
-
-
-
-
-            }
+            MappAllViewFields(request);
 
             DataSourceResult result = expenses.ToDataSourceResult(request, c => new IncomeExpenseViewModel
             {
@@ -86,7 +71,16 @@ namespace JJServicios.Web.Controllers
             return result;
         }
 
-        private static void MapMovementTypeName(IList<IFilterDescriptor> filters, IFilterDescriptor f)
+        private static void MappAllViewFields(DataSourceRequest request)
+        {
+            var rw = request.Filters.ToList();
+            foreach (var f in rw)
+            {
+                MappViewFields(f, "MovementType", "MovementType.Name");
+            }
+        }
+
+        private static void MappViewFields(IFilterDescriptor f, string current, string toMap)
         {
             var type = f.GetType();
 
@@ -96,15 +90,15 @@ namespace JJServicios.Web.Controllers
 
                 foreach (var item in cfd.FilterDescriptors)
                 {
-                    MapMovementTypeName(cfd.FilterDescriptors, item);
+                    MappViewFields(item,current,toMap);
                 }
             }
             else
             {
                 FilterDescriptor fd = (FilterDescriptor) f;
-                if (fd.Member == "MovementType")
+                if (fd.Member == current)
                 {
-                    fd.Member = "MovementType.Name";
+                    fd.Member = toMap;
                 }
             }
         }
@@ -125,9 +119,9 @@ namespace JJServicios.Web.Controllers
                     MovementTypeId = expense.MovementTypeId
                 };
 
-                db.Expense.Attach(entity);
-                db.Entry(entity).State = EntityState.Modified;
-                db.SaveChanges();
+                _db.Expense.Attach(entity);
+                _db.Entry(entity).State = EntityState.Modified;
+                _db.SaveChanges();
             }
 
             return Json(new[] { expense }.ToDataSourceResult(request, ModelState));
@@ -148,9 +142,9 @@ namespace JJServicios.Web.Controllers
                     MovementTypeId = expense.MovementTypeId
                 };
 
-                db.Expense.Attach(entity);
-                db.Expense.Remove(entity);
-                db.SaveChanges();
+                _db.Expense.Attach(entity);
+                _db.Expense.Remove(entity);
+                _db.SaveChanges();
             }
 
             return Json(new[] { expense }.ToDataSourceResult(request, ModelState));
@@ -166,7 +160,7 @@ namespace JJServicios.Web.Controllers
 
         protected override void Dispose(bool disposing)
         {
-            db.Dispose();
+            _db.Dispose();
             base.Dispose(disposing);
         }
     }

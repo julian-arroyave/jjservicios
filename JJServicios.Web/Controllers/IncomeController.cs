@@ -1,41 +1,30 @@
-﻿﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System;
 using System.Data.Entity;
 using System.Linq;
-using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using JJServicios.DB.Contracts;
-﻿using JJServicios.Web.Models;
+using JJServicios.Web.Models;
+using Kendo.Mvc;
 
 namespace JJServicios.Web.Controllers
 {
     public class IncomeController : Controller
     {
-        private JJServiciosEntities db = new JJServiciosEntities();
+        private readonly JJServiciosEntities _db = new JJServiciosEntities();
 
         public ActionResult Index()
         {
+            IQueryable<MovementType> movementTypes = _db.MovementType;
+            ViewData["MovementTypes"] = new SelectList(movementTypes, "Id", "Name");
             return View();
         }
 
         public ActionResult Income_Read([DataSourceRequest]DataSourceRequest request)
         {
-            IQueryable<Income> income = db.Income;
-            DataSourceResult result = income.ToDataSourceResult(request, c => new IncomeExpenseViewModel
-            {
-                Amount = c.Amount,
-                Observations = c.Observations,
-                MovementType = c.MovementType.Name,
-                Id = c.Id,
-                MovementTypeId = c.MovementTypeId,
-                CreatedDate = c.CreatedDate,
-                UpdateDate = c.UpdateDate
-            });
-
+            IQueryable<Income> incomes = _db.Income;
+            var result = GetIncomesDataResult(request, incomes);
             return Json(result);
         }
 
@@ -46,19 +35,72 @@ namespace JJServicios.Web.Controllers
             {
                 var entity = new Income
                 {
+                    AgentId = 1,
                     Amount = income.Amount,
                     Observations = income.Observations,
-                    CreatedDate = income.CreatedDate,
-                    UpdateDate = income.UpdateDate,
+                    CreatedDate = DateTime.UtcNow,
+                    UpdateDate = DateTime.UtcNow,
                     MovementTypeId = income.MovementTypeId
                 };
 
-                db.Income.Add(entity);
-                db.SaveChanges();
+                _db.Income.Add(entity);
+                _db.SaveChanges();
                 income.Id = entity.Id;
             }
 
             return Json(new[] { income }.ToDataSourceResult(request, ModelState));
+
+        }
+
+        private DataSourceResult GetIncomesDataResult(DataSourceRequest request, IQueryable<Income> incomes)
+        {
+            IQueryable<MovementType> movementType = _db.MovementType;
+
+            MappAllViewFields(request);
+
+            DataSourceResult result = incomes.ToDataSourceResult(request, c => new IncomeExpenseViewModel
+            {
+                Amount = c.Amount,
+                Observations = c.Observations,
+                Id = c.Id,
+                MovementType = movementType.Where(x => x.Id == c.MovementTypeId).Select(x => x.Name).First(),
+                MovementTypeId = c.MovementTypeId,
+                CreatedDate = c.CreatedDate.ToLocalTime(),
+                UpdateDate = c.UpdateDate.ToLocalTime()
+            });
+            return result;
+        }
+
+        private static void MappAllViewFields(DataSourceRequest request)
+        {
+            var rw = request.Filters.ToList();
+            foreach (var f in rw)
+            {
+                MappViewFields(f, "MovementType", "MovementType.Name");
+            }
+        }
+
+        private static void MappViewFields(IFilterDescriptor f, string current, string toMap)
+        {
+            var type = f.GetType();
+
+            if (type.Name != "FilterDescriptor")
+            {
+                CompositeFilterDescriptor cfd = (CompositeFilterDescriptor)f;
+
+                foreach (var item in cfd.FilterDescriptors)
+                {
+                    MappViewFields(item, current, toMap);
+                }
+            }
+            else
+            {
+                FilterDescriptor fd = (FilterDescriptor)f;
+                if (fd.Member == current)
+                {
+                    fd.Member = toMap;
+                }
+            }
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
@@ -68,17 +110,18 @@ namespace JJServicios.Web.Controllers
             {
                 var entity = new Income
                 {
+                    AgentId = 1,
                     Id = income.Id,
                     Amount = income.Amount,
                     Observations = income.Observations,
                     CreatedDate = income.CreatedDate,
-                    UpdateDate = income.UpdateDate,
+                    UpdateDate = DateTime.UtcNow,
                     MovementTypeId = income.MovementTypeId
                 };
 
-                db.Income.Attach(entity);
-                db.Entry(entity).State = EntityState.Modified;
-                db.SaveChanges();
+                _db.Income.Attach(entity);
+                _db.Entry(entity).State = EntityState.Modified;
+                _db.SaveChanges();
             }
 
             return Json(new[] { income }.ToDataSourceResult(request, ModelState));
@@ -99,9 +142,9 @@ namespace JJServicios.Web.Controllers
                     MovementTypeId = income.MovementTypeId
                 };
 
-                db.Income.Attach(entity);
-                db.Income.Remove(entity);
-                db.SaveChanges();
+                _db.Income.Attach(entity);
+                _db.Income.Remove(entity);
+                _db.SaveChanges();
             }
 
             return Json(new[] { income }.ToDataSourceResult(request, ModelState));
@@ -117,7 +160,7 @@ namespace JJServicios.Web.Controllers
 
         protected override void Dispose(bool disposing)
         {
-            db.Dispose();
+            _db.Dispose();
             base.Dispose(disposing);
         }
     }

@@ -8,19 +8,24 @@
       .Columns(columns =>
       {
           columns.Bound(c => c.Amount).Title("Cantidad");
-          columns.Bound(c => c.Observations).Title("Observaciones"); 
+          columns.Bound(c => c.Observations).Title("Observaciones");
           columns.Bound(c => c.MovementType).Title("Tipo de movimiento").Sortable(false).Filterable(filterable => filterable.Extra(false).UI("movementTypesFilter").Operators(operators => operators.ForString(str => str.Clear().Contains("Contiene")))
               );
           columns.Bound(c => c.CreatedDate).Hidden();
           columns.Bound(c => c.UpdateDate).Title("Fecha de actualización").ClientTemplate("#=kendo.toString(UpdateDate,'yyyy-MM-dd h:mm:ss tt')#").Filterable(filterable => filterable.Extra(true).Operators(operators => operators.ForDate(str => str.Clear()
           .IsGreaterThanOrEqualTo("Mayor o igual a")
           .IsLessThanOrEqualTo("Menor o igual a"))));
-          columns.Command(command => { command.Edit(); command.Destroy(); }).Width(180);
+          columns.Command(command =>
+          {
+              command.Edit()
+    .Text(" ").UpdateText(" ").CancelText(" ");
+              command.Destroy().Text(" ");
+          }).Width(160);
       })
       .ToolBar(toolbar =>
       {
-          toolbar.Create();
-          toolbar.Excel();
+          toolbar.Create().Text("Nuevo");
+          toolbar.Excel().Text("Exportar a excel");
       })
       .Filterable()
       .Editable(editable => editable.Mode(GridEditMode.InLine))

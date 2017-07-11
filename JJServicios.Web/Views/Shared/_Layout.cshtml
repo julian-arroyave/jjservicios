@@ -32,8 +32,10 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Salidas", "Index", "Expense")</li>
-                    <li>@Html.ActionLink("Tipos de movimientos", "Index", "MovementType")</li> 
+                    <li>@Html.ActionLink("Salidas por servicios", "Index", "ServiceMovement")</li>
+                    <li>@Html.ActionLink("Otras salidas", "Index", "Expense")</li>
+                    <li>@Html.ActionLink("Entradas", "Index", "Income")</li>
+                    <li>@Html.ActionLink("Tipos de movimientos", "Index", "MovementType")</li>
                     <li>@Html.ActionLink("Cargos", "Index", "EmployeePosition")</li>
                     <li>@Html.ActionLink("Cuentas financieras", "Index", "FinancialAccount")</li>
                 </ul>
@@ -50,15 +52,42 @@
     </div>
     <script type="text/javascript">
 
-    function onSaveChanges(e) {
-        e.sender.one("dataBound", function() {
-            e.sender.dataSource.read();
-        });
-    };
+        function onSaveChanges(e) {
+            e.sender.one("dataBound", function() {
+                e.sender.dataSource.read();
+            });
+        };
 
     </script>
     
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+
+
+<script type="text/javascript">
+
+    function movementTypesFilter(element) {
+        element.kendoAutoComplete({
+            dataSource: {
+                transport: {
+                    read: "@Url.Action("GetMovementTypes", "Ajax")"
+            }
+        }
+        });
+    }    
+
+    function employeesFilter(element) {
+        element.kendoAutoComplete({
+            dataSource: {
+                transport: {
+                    read: "@Url.Action("GetEmployees", "Ajax")"
+            }
+        }
+        });
+    }    
+
+
+</script>
+
 </body>
 </html>
