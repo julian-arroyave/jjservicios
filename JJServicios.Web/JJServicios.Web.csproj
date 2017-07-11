@@ -209,6 +209,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AjaxController.cs" />
+    <Compile Include="Controllers\EmployeeController.cs" />
     <Compile Include="Controllers\EmployeePositionController.cs" />
     <Compile Include="Controllers\ExpenseController.cs" />
     <Compile Include="Controllers\FinancialAccountController.cs" />
@@ -230,6 +231,7 @@
     <Compile Include="Models\IncomeExpenseViewModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\ServiceMovementViewModel.cs" />
+    <Compile Include="Models\SummaryViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -315,11 +317,13 @@
     <Content Include="Views\Test\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\EmployeeDataType.cshtml" />
     <Content Include="Views\ServiceMovement\Index.cshtml" />
+    <Content Include="Views\Employee\Index.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\FinancialAccountDataType.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\EmployeePositionDataType.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Ajax\" />
-    <Folder Include="Views\Employee\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

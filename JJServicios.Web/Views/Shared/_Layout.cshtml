@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>J & J Admin</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 
@@ -36,6 +36,7 @@
                     <li>@Html.ActionLink("Otras salidas", "Index", "Expense")</li>
                     <li>@Html.ActionLink("Entradas", "Index", "Income")</li>
                     <li>@Html.ActionLink("Tipos de movimientos", "Index", "MovementType")</li>
+                    <li>@Html.ActionLink("Empleados", "Index", "Employee")</li>
                     <li>@Html.ActionLink("Cargos", "Index", "EmployeePosition")</li>
                     <li>@Html.ActionLink("Cuentas financieras", "Index", "FinancialAccount")</li>
                 </ul>
@@ -86,6 +87,25 @@
         });
     }    
 
+    function employeePositionFilter(element) {
+        element.kendoAutoComplete({
+            dataSource: {
+                transport: {
+                    read: "@Url.Action("GetEmployeePositions", "Ajax")"
+            }
+        }
+        });
+    }
+
+    function financialAccountFilter(element) {
+        element.kendoAutoComplete({
+            dataSource: {
+                transport: {
+                    read: "@Url.Action("GetFincancialAccounts", "Ajax")"
+            }
+        }
+        });
+    }    
 
 </script>
 

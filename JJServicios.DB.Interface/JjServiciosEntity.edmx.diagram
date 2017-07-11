@@ -4,16 +4,16 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="5f145e5122f64d3fb20b04f2db8ab8e5" Name="Diagram1">
+      <Diagram DiagramId="4ec3f45b3f2c4f69998b2eeac7004478" Name="Diagram1">
         <EntityTypeShape EntityType="JJServiciosModel.Agent" Width="1.5" PointX="0.75" PointY="12.375" IsExpanded="true" />
         <EntityTypeShape EntityType="JJServiciosModel.Employee" Width="1.5" PointX="5.25" PointY="14.625" IsExpanded="true" />
         <EntityTypeShape EntityType="JJServiciosModel.EmployeePosition" Width="1.5" PointX="3" PointY="9.75" IsExpanded="true" />
         <EntityTypeShape EntityType="JJServiciosModel.Expense" Width="1.5" PointX="5.25" PointY="21.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="JJServiciosModel.FinancialAccount" Width="1.5" PointX="3" PointY="22.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="JJServiciosModel.FinancialAccount" Width="1.5" PointX="3" PointY="22.75" IsExpanded="true" />
         <EntityTypeShape EntityType="JJServiciosModel.Income" Width="1.5" PointX="8.25" PointY="20.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="JJServiciosModel.MovementType" Width="1.5" PointX="3" PointY="29.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="JJServiciosModel.MovementType" Width="1.5" PointX="3" PointY="29.375" IsExpanded="true" />
         <EntityTypeShape EntityType="JJServiciosModel.PaymentEmployee" Width="1.5" PointX="7.5" PointY="14.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="JJServiciosModel.ServiceMovement" Width="1.5" PointX="10.5" PointY="19.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="JJServiciosModel.ServiceMovement" Width="1.5" PointX="10.5" PointY="19.375" IsExpanded="true" />
         <AssociationConnector Association="JJServiciosModel.FK_Employee_Agent" ManuallyRouted="false" />
         <AssociationConnector Association="JJServiciosModel.FK_EmployeePosition_Agent1" ManuallyRouted="false" />
         <AssociationConnector Association="JJServiciosModel.FK_Expense_Agent" ManuallyRouted="false" />

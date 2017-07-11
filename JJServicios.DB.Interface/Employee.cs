@@ -24,8 +24,7 @@ namespace JJServicios.DB.Contracts
         public long Id { get; set; }
         public string Identification { get; set; }
         public string Name { get; set; }
-        public string LastName { get; set; }
-        public long FinancialNumber { get; set; }
+        public string FinancialNumber { get; set; }
         public string Mobile { get; set; }
         public string OtherPhone { get; set; }
         public string WhatsApp { get; set; }

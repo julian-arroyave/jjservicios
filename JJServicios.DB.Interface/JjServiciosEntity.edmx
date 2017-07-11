@@ -23,8 +23,7 @@
           <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Identification" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="FinancialNumber" Type="bigint" Nullable="false" />
+          <Property Name="FinancialNumber" Type="nvarchar" MaxLength="50" />
           <Property Name="Mobile" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="OtherPhone" Type="nvarchar" MaxLength="20" />
           <Property Name="WhatsApp" Type="nvarchar" MaxLength="20" />
@@ -407,8 +406,7 @@
           <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Identification" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="FinancialNumber" Type="Int64" Nullable="false" />
+          <Property Name="FinancialNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Mobile" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="OtherPhone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="WhatsApp" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
@@ -806,7 +804,6 @@
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Identification" ColumnName="Identification" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
                 <ScalarProperty Name="FinancialNumber" ColumnName="FinancialNumber" />
                 <ScalarProperty Name="Mobile" ColumnName="Mobile" />
                 <ScalarProperty Name="OtherPhone" ColumnName="OtherPhone" />

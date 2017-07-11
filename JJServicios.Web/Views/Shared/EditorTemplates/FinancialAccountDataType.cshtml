@@ -1,0 +1,14 @@
+@model string
+
+@{
+    var selectedList = (SelectList)ViewData["FinancialAccounts"];
+}
+@{
+    <select id="FinancialAccountId" name="FinancialAccountId">
+        @foreach (var item in selectedList)
+        {
+            <option value="@item.Value">@item.Text</option>
+        }
+    </select>
+}
+

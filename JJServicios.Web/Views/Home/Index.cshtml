@@ -3,14 +3,16 @@
     ViewBag.Title = "Home Page";
 }
 
-@(Html.Kendo().Grid<AgentViewModel>()
+@(Html.Kendo().Grid<SummaryViewModel>()
       .Name("grid")
       .Columns(columns =>
       {
-          columns.Bound(c => c.Name);
-          columns.Bound(c => c.Email);
-          columns.Bound(c => c.Password);
-          columns.Bound(c => c.Id);
+          columns.Bound(c => c.MovementId);
+          columns.Bound(c => c.MovementDate);
+          columns.Bound(c => c.MovementType);
+          columns.Bound(c => c.AmountIn);
+          columns.Bound(c => c.Observations);
+          columns.Bound(c => c.Total);
       })
       .Groupable()
       .Scrollable()
@@ -21,4 +23,5 @@
           .Ajax()
           .Read(read => read.Action("Agent_Read", "Home"))
       )
-)
+      )
+

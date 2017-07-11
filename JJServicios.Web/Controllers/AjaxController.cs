@@ -28,5 +28,19 @@ namespace JJServicios.Web.Controllers
 
             return Json(employees.Select(e => e.Name).Distinct(), JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult GetEmployeePositions()
+        {
+            IQueryable<EmployeePosition> employeePosition = db.EmployeePosition;
+
+            return Json(employeePosition.Select(e => e.Name).Distinct(), JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetFincancialAccounts()
+        {
+            IQueryable<FinancialAccount> financialAccount = db.FinancialAccount;
+
+            return Json(financialAccount.Select(e => e.Name).Distinct(), JsonRequestBehavior.AllowGet);
+        }
     }
 }

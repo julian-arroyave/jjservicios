@@ -5,7 +5,6 @@
       .Columns(columns =>
       {
           columns.Bound(c => c.Name);
-          columns.Bound(c => c.UpdateDate).Width(90).Title("Fecha").ClientTemplate("#=kendo.toString(UpdateDate,'yyyy-MM-dd')#");
           columns.Command(command =>
           {
               command.Edit()

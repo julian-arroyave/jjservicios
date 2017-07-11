@@ -1,10 +1,9 @@
-﻿
+﻿<h1>Cargos</h1>
 @(Html.Kendo().Grid<JJServicios.DB.Contracts.EmployeePosition>()
       .Name("grid")
       .Columns(columns =>
       {
           columns.Bound(c => c.Name).Title("Nombre de Agente");
-          columns.Bound(c => c.UpdateDate).Width(90).Title("Fecha").ClientTemplate("#=kendo.toString(UpdateDate,'yyyy-MM-dd')#");
           columns.Command(command =>
           {
               command.Edit()

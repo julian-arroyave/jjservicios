@@ -1,0 +1,70 @@
+﻿@using JJServicios.Web.Models
+<h1>Empleados</h1>
+@(Html.Kendo().Grid<EmployeeViewModel>()
+      .Name("grid")
+      .Columns(columns =>
+      {
+
+          columns.Bound(c => c.Identification).Title("Identificación");
+          columns.Bound(c => c.Name).Title("Nombre");
+          columns.Bound(c => c.FinancialNumber).Title("No Cuenta");
+          columns.Bound(c => c.Mobile).Title("Celular");
+          columns.Bound(c => c.OtherPhone).Title("Otro teléfono");
+          columns.Bound(c => c.WhatsApp).Title("WhatsApp");
+          columns.Bound(c => c.Skype);
+          columns.Bound(c => c.CorporateEmail).Title("Email corporativo"); 
+          columns.Bound(c => c.OtherEmail).Title("Otro email"); ;
+          columns.Bound(c => c.ResidenceCity).Title("Ciudad de residencia");
+          columns.Bound(c => c.EmployeePosition).Title("Cargo").Sortable(false).Filterable(filterable => filterable.Extra(false).UI("employeePositionFilter").Operators(operators => operators.ForString(str => str.Clear().Contains("Contiene"))));
+          columns.Bound(c => c.EmployeePositionId);
+          columns.Bound(c => c.FinancialAccount).Title("Entidad financiera").Sortable(false).Filterable(filterable => filterable.Extra(false).UI("financialAccountFilter").Operators(operators => operators.ForString(str => str.Clear().Contains("Contiene"))));
+          columns.Bound(c => c.FinancialAccountId);
+          columns.Bound(c => c.EmployeePositionId);
+          columns.Bound(c => c.Address).Title("Dirección"); ;
+          columns.Bound(c => c.Active).Visible(false); ;
+          columns.Bound(c => c.Birthdate).Width(90).Title("Cumpleaños").ClientTemplate("#=kendo.toString(UpdateDate,'yyyy-MM-dd')#").Filterable(filterable => filterable.Extra(true).Operators(operators => operators.ForDate(str => str.Clear()
+          .IsGreaterThanOrEqualTo("Mayor o igual a")
+          .IsLessThanOrEqualTo("Menor o igual a"))));
+          columns.Bound(c => c.CreatedDate).Width(90).Title("Fecha de creación").ClientTemplate("#=kendo.toString(UpdateDate,'yyyy-MM-dd')#");
+          columns.Bound(c => c.UpdateDate).Width(90).Title("Fecha de actualización").ClientTemplate("#=kendo.toString(UpdateDate,'yyyy-MM-dd')#");
+          columns.Command(command =>
+          {
+              command.Edit()
+          .Text(" ").UpdateText(" ").CancelText(" ");
+          }).Width(80);
+
+      })
+      .ToolBar(toolbar => {
+          toolbar.Create().Text("Nuevo");
+          toolbar.Excel().Text("Exportar a excel");
+      })
+      .ColumnMenu()
+      .Editable(editable => editable.Mode(GridEditMode.PopUp))
+      .Sortable(sortable => {
+          sortable.SortMode(GridSortMode.SingleColumn);
+      })
+      .Filterable()
+      .Scrollable()
+      .Events(events =>
+       {
+           events.SaveChanges("onSaveChanges");
+           events.Remove("onSaveChanges");
+           events.Save("onSaveChanges");
+           events.Edit("onSaveChanges");
+       })
+      .DataSource(dataSource => dataSource
+          .Ajax()
+          .Model(model =>
+          {
+              model.Id(p => p.Id);
+              model.Field(fld => fld.UpdateDate).Editable(false);
+              model.Field(fld => fld.CreatedDate).Editable(false);
+              model.Field(fld => fld.Active).Editable(false);
+              model.Field(fld => fld.Id).Editable(false);
+          })
+          .Read(read => read.Action("Employee_Read", "Employee"))
+          .Create(create => create.Action("Employee_Create", "Employee"))
+          .Update(update => update.Action("Employee_Update", "Employee"))
+          .Destroy(destroy => destroy.Action("Employee_Destroy", "Employee"))
+      )
+)
