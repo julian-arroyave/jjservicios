@@ -29,6 +29,8 @@
         <AssociationConnector Association="JJServiciosModel.FK_Expense_MovementType" ManuallyRouted="false" />
         <AssociationConnector Association="JJServiciosModel.FK_Income_MovementType" ManuallyRouted="false" />
         <AssociationConnector Association="JJServiciosModel.FK_ServiceMovement_MovementType" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="JJServiciosModel.WorkTimeLog" Width="1.5" PointX="3" PointY="13" />
+        <AssociationConnector Association="JJServiciosModel.FK_WorkTimeLog_Agent" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using JJServicios.DB.Contracts;
+﻿using JJServicios.DB.Contracts.Repositories;
 ﻿using JJServicios.Web.Models;
 ﻿using Kendo.Mvc;
 
@@ -13,7 +14,15 @@ namespace JJServicios.Web.Controllers
     public class ExpenseController : Controller
     {
         private readonly JJServiciosEntities _db = new JJServiciosEntities();
-        
+
+        private readonly IDeleteAdoRepository _dbAdoRepository;
+
+        public ExpenseController(IDeleteAdoRepository dbAdoRepository)
+        {
+            _dbAdoRepository = dbAdoRepository;
+        }
+
+        [AccessControlAttribute]
         public ActionResult Index()
         {
             IQueryable<MovementType> movementTypes = _db.MovementType;
@@ -21,6 +30,7 @@ namespace JJServicios.Web.Controllers
             return View();
         }
 
+        [AccessControlAttribute]
         public ActionResult Expense_Read([DataSourceRequest]DataSourceRequest request)
         {
             IQueryable<Expense> expenses = _db.Expense;
@@ -28,6 +38,7 @@ namespace JJServicios.Web.Controllers
             return Json(result);
         }
 
+        [AccessControlAttribute]
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Expense_Create([DataSourceRequest]DataSourceRequest request, IncomeExpenseViewModel expense)
         {
@@ -35,7 +46,7 @@ namespace JJServicios.Web.Controllers
             {
                 var entity = new Expense
                 {
-                    AgentId = 1,
+                    AgentId = AuthenticationHelper.AuthenticationHelper.GetAgentId(),
                     Amount = expense.Amount,
                     Observations = expense.Observations,
                     CreatedDate = DateTime.UtcNow,
@@ -52,6 +63,7 @@ namespace JJServicios.Web.Controllers
 
         }
 
+        [AccessControlAttribute]
         private DataSourceResult GetExpensesDataResult(DataSourceRequest request, IQueryable<Expense> expenses)
         {
             IQueryable<MovementType> movementType = _db.MovementType;
@@ -103,6 +115,7 @@ namespace JJServicios.Web.Controllers
             }
         }
 
+        [AccessControlAttribute]
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Expense_Update([DataSourceRequest]DataSourceRequest request, IncomeExpenseViewModel expense)
         {
@@ -110,11 +123,11 @@ namespace JJServicios.Web.Controllers
             {
                 var entity = new Expense
                 {
-                    AgentId = 1,
+                    AgentId = AuthenticationHelper.AuthenticationHelper.GetAgentId(),
                     Id = expense.Id,
                     Amount = expense.Amount,
                     Observations = expense.Observations,
-                    CreatedDate = expense.CreatedDate,
+                    CreatedDate = expense.CreatedDate.ToUniversalTime(),
                     UpdateDate = DateTime.UtcNow,
                     MovementTypeId = expense.MovementTypeId
                 };
@@ -127,29 +140,24 @@ namespace JJServicios.Web.Controllers
             return Json(new[] { expense }.ToDataSourceResult(request, ModelState));
         }
 
+        [AccessControlAttribute]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Expense_Destroy([DataSourceRequest]DataSourceRequest request, IncomeExpenseViewModel expense)
+        public ActionResult Expense_Destroy([DataSourceRequest]DataSourceRequest request, IncomeExpenseViewModel serviceMovement)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var entity = new Expense
-                {
-                    Id = expense.Id,
-                    Amount = expense.Amount,
-                    Observations = expense.Observations,
-                    CreatedDate = expense.CreatedDate,
-                    UpdateDate = expense.UpdateDate,
-                    MovementTypeId = expense.MovementTypeId
-                };
-
-                _db.Expense.Attach(entity);
-                _db.Expense.Remove(entity);
-                _db.SaveChanges();
+                _dbAdoRepository.DeleteItemById(serviceMovement.Id, "Expense");
+            }
+            catch (Exception ex)
+            {
+                var exMessage = ex.Message;
             }
 
-            return Json(new[] { expense }.ToDataSourceResult(request, ModelState));
+
+            return Json(new[] { serviceMovement }.ToDataSourceResult(request, ModelState));
         }
 
+        [AccessControlAttribute]
         [HttpPost]
         public ActionResult Excel_Export_Save(string contentType, string base64, string fileName)
         {

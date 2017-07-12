@@ -6,6 +6,7 @@ using JJServicios.DB.Contracts;
 using JJServicios.Web.Models;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
+using Microsoft.AspNet.Identity;
 
 namespace JJServicios.Web.Controllers
 {
@@ -19,16 +20,18 @@ namespace JJServicios.Web.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        [AccessControlAttribute]
         public ActionResult Index()
         {
+            var user = User.Identity.GetUserName();
             return View();
         }
 
-        
+        [AccessControlAttribute]
         public ActionResult Agent_Read([DataSourceRequest]DataSourceRequest request)
         {
             var limitDate = DateTime.Today.AddDays(-60);
-            IQueryable<Expense> expenses = _db.Expense.Where(x=> x.CreatedDate >= limitDate);
+            IQueryable<Expense> expenses = _db.Expense.Where(x => x.CreatedDate >= limitDate);
             IQueryable<Income> incomes = _db.Income.Where(x => x.CreatedDate >= limitDate); ;
             IQueryable<ServiceMovement> serviceMovement = _db.ServiceMovement.Where(x => x.CreatedDate >= limitDate);
 
@@ -42,13 +45,14 @@ namespace JJServicios.Web.Controllers
             var prevTotal = prevIncomes.ToList().Sum(x => x.Amount) - prevExpenses.ToList().Sum(x => x.Amount) -
                             prevServiceMovement.ToList().Sum(x => x.Amount);
 
-            List<SummaryViewModel> summaryList = new List<SummaryViewModel>();
+            IList<SummaryViewModel> summaryList = new List<SummaryViewModel>();
 
             summaryList.AddRange(expenses.Select(x => new SummaryViewModel()
             {
                 AmountOut = x.Amount,
+                AgentName = x.Agent.Name,
                 MovementDate = x.CreatedDate,
-                MovementId = x.Id,
+                Id = x.Id,
                 Observations = x.Observations,
                 MovementType = x.MovementType.Name,
                 AmountIn = 0,
@@ -57,8 +61,9 @@ namespace JJServicios.Web.Controllers
             summaryList.AddRange(serviceMovement.Select(x => new SummaryViewModel()
             {
                 AmountOut = x.Amount,
+                AgentName = x.Agent.Name,
                 MovementDate = x.CreatedDate,
-                MovementId = x.Id,
+                Id = x.Id,
                 Observations = x.Observations,
                 MovementType = x.MovementType.Name,
                 AmountIn = 0,
@@ -67,22 +72,27 @@ namespace JJServicios.Web.Controllers
             summaryList.AddRange(incomes.Select(x => new SummaryViewModel()
             {
                 AmountOut = 0,
+                AgentName = x.Agent.Name,
                 MovementDate = x.CreatedDate,
-                MovementId = x.Id,
+                Id = x.Id,
                 Observations = x.Observations,
                 MovementType = x.MovementType.Name,
                 AmountIn = x.Amount,
             }));
 
+            summaryList = summaryList.OrderBy(x => x.MovementDate).ToList();
+
             foreach (var move in summaryList)
             {
                 prevTotal += move.AmountIn - move.AmountOut;
                 move.Total = prevTotal;
+                move.MovementDate = move.MovementDate.ToLocalTime();
             }
 
-            return Json(new[] { summaryList }.ToDataSourceResult(request, ModelState));
+            return Json(summaryList.ToDataSourceResult(request));
         }
 
+        [AccessControlAttribute]
         public ActionResult GetMovementTypes()
         {
             IQueryable<MovementType> movementsTypes = _db.MovementType;

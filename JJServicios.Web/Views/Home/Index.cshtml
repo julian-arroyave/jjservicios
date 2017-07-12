@@ -3,24 +3,29 @@
     ViewBag.Title = "Home Page";
 }
 
+<style type="text/css">
+   td {text-align:right;} 
+</style>
+
 @(Html.Kendo().Grid<SummaryViewModel>()
       .Name("grid")
+            .HtmlAttributes(new { style = "height:550px;" })
       .Columns(columns =>
       {
-          columns.Bound(c => c.MovementId);
-          columns.Bound(c => c.MovementDate);
-          columns.Bound(c => c.MovementType);
-          columns.Bound(c => c.AmountIn);
-          columns.Bound(c => c.Observations);
-          columns.Bound(c => c.Total);
+          columns.Bound(c => c.AgentName).Title("Agente").Width(80).ClientTemplate("<div style='text-align:center';>#=AgentName#</div>"); 
+          columns.Bound(c => c.MovementDate).Title("Fecha de Movimiento").ClientTemplate("#=kendo.toString(MovementDate,'yyyy-MM-dd h:mm:ss tt')#");
+          columns.Bound(c => c.MovementType).Title("Tipo de Movimiento");
+          columns.Bound(c => c.AmountInString).Title("Cantidad").ClientTemplate("<div style='color:blue';>#=AmountInString#</div>"); 
+          columns.Bound(c => c.AmountOutString).Title("Cantidad").ClientTemplate("<div style='color:red';>#=AmountOutString#</div>");
+          columns.Bound(c => c.Observations).Title("Observaciones");
+          columns.Bound(c => c.TotalString).Title("Total a la fecha");
       })
-      .Groupable()
       .Scrollable()
-      .Filterable()
-      .Sortable()
       .Pageable()
+
       .DataSource(dataSource => dataSource
           .Ajax()
+          .Sort(sort => sort.Add("MovementDate").Descending())
           .Read(read => read.Action("Agent_Read", "Home"))
       )
       )

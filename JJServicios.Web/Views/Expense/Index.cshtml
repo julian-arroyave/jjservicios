@@ -11,8 +11,8 @@
           columns.Bound(c => c.Observations).Title("Observaciones");
           columns.Bound(c => c.MovementType).Title("Tipo de movimiento").Sortable(false).Filterable(filterable => filterable.Extra(false).UI("movementTypesFilter").Operators(operators => operators.ForString(str => str.Clear().Contains("Contiene")))
               );
-          columns.Bound(c => c.CreatedDate).Hidden();
-          columns.Bound(c => c.UpdateDate).Title("Fecha de actualización").ClientTemplate("#=kendo.toString(UpdateDate,'yyyy-MM-dd h:mm:ss tt')#").Filterable(filterable => filterable.Extra(true).Operators(operators => operators.ForDate(str => str.Clear()
+          columns.Bound(c => c.UpdateDate).Hidden();
+          columns.Bound(c => c.CreatedDate).Title("Fecha de creación").ClientTemplate("#=kendo.toString(CreatedDate,'yyyy-MM-dd h:mm:ss tt')#").Filterable(filterable => filterable.Extra(true).Operators(operators => operators.ForDate(str => str.Clear()
           .IsGreaterThanOrEqualTo("Mayor o igual a")
           .IsLessThanOrEqualTo("Menor o igual a"))));
           columns.Command(command =>
@@ -40,7 +40,7 @@
           sortable.SortMode(GridSortMode.SingleColumn);
       })
       .Scrollable()
-       .Events(events =>
+      .Events(events =>
        {
            events.SaveChanges("onSaveChanges");
            events.Remove("onSaveChanges");
@@ -49,11 +49,11 @@
        })
       .DataSource(dataSource => dataSource
           .Ajax()
-          .Sort(sort => sort.Add("UpdateDate").Descending())
+          .Sort(sort => sort.Add("CreatedDate").Descending())
           .Model(model =>
           {
               model.Id(p => p.Id);
-              model.Field(fld => fld.UpdateDate).Editable(false);
+              model.Field(fld => fld.CreatedDate).Editable(false);
           })
           .Read(read => read.Action("Expense_Read", "Expense"))
           .Create(create => create.Action("Expense_Create", "Expense"))

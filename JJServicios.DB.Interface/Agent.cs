@@ -25,6 +25,7 @@ namespace JJServicios.DB.Contracts
             this.MovementType = new HashSet<MovementType>();
             this.PaymentEmployee = new HashSet<PaymentEmployee>();
             this.ServiceMovement = new HashSet<ServiceMovement>();
+            this.WorkTimeLog = new HashSet<WorkTimeLog>();
         }
     
         public long Id { get; set; }
@@ -50,5 +51,7 @@ namespace JJServicios.DB.Contracts
         public virtual ICollection<PaymentEmployee> PaymentEmployee { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ServiceMovement> ServiceMovement { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<WorkTimeLog> WorkTimeLog { get; set; }
     }
 }

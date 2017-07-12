@@ -15,8 +15,8 @@
               );
           columns.Bound(c => c.Employee).Title("Empleado").Sortable(false).Filterable(filterable => filterable.Extra(false).UI("employeesFilter").Operators(operators => operators.ForString(str => str.Clear().Contains("Contiene"))));
           columns.Bound(c => c.Support).Title("Soporte");
-          columns.Bound(c => c.CreatedDate).Hidden();
-          columns.Bound(c => c.UpdateDate).Width(90).Title("Fecha").ClientTemplate("#=kendo.toString(UpdateDate,'yyyy-MM-dd')#").Filterable(filterable => filterable.Extra(true).Operators(operators => operators.ForDate(str => str.Clear()
+          columns.Bound(c => c.UpdateDate).Hidden();
+          columns.Bound(c => c.CreatedDate).Width(90).Title("Fecha").ClientTemplate("#=kendo.toString(CreatedDate,'yyyy-MM-dd')#").Filterable(filterable => filterable.Extra(true).Operators(operators => operators.ForDate(str => str.Clear()
           .IsGreaterThanOrEqualTo("Mayor o igual a")
           .IsLessThanOrEqualTo("Menor o igual a"))));
           columns.Command(command => { command.Edit()
@@ -44,10 +44,11 @@
       .DataSource(dataSource => dataSource
           .Ajax()
           .Sort(sort => sort.Add("UpdateDate").Descending())
+           .Sort(sort => sort.Add("CreatedDate").Descending())
           .Model(model =>
           {
               model.Id(p => p.Id);
-              model.Field(fld => fld.UpdateDate).Editable(false);
+              model.Field(fld => fld.CreatedDate).Editable(false);
           })
           .Read(read => read.Action("ServiceMovement_Read", "ServiceMovement"))
           .Create(create => create.Action("ServiceMovement_Create", "ServiceMovement"))

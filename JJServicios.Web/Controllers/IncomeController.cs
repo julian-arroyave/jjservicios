@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using JJServicios.DB.Contracts;
+using JJServicios.DB.Contracts.Repositories;
 using JJServicios.Web.Models;
 using Kendo.Mvc;
 
@@ -14,6 +15,14 @@ namespace JJServicios.Web.Controllers
     {
         private readonly JJServiciosEntities _db = new JJServiciosEntities();
 
+        private readonly IDeleteAdoRepository _dbAdoRepository;
+
+        public IncomeController(IDeleteAdoRepository dbAdoRepository)
+        {
+            _dbAdoRepository = dbAdoRepository;
+        }
+
+        [AccessControlAttribute]
         public ActionResult Index()
         {
             IQueryable<MovementType> movementTypes = _db.MovementType;
@@ -21,6 +30,7 @@ namespace JJServicios.Web.Controllers
             return View();
         }
 
+        [AccessControlAttribute]
         public ActionResult Income_Read([DataSourceRequest]DataSourceRequest request)
         {
             IQueryable<Income> incomes = _db.Income;
@@ -28,6 +38,7 @@ namespace JJServicios.Web.Controllers
             return Json(result);
         }
 
+        [AccessControlAttribute]
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Income_Create([DataSourceRequest]DataSourceRequest request, IncomeExpenseViewModel income)
         {
@@ -35,7 +46,7 @@ namespace JJServicios.Web.Controllers
             {
                 var entity = new Income
                 {
-                    AgentId = 1,
+                    AgentId = AuthenticationHelper.AuthenticationHelper.GetAgentId(),
                     Amount = income.Amount,
                     Observations = income.Observations,
                     CreatedDate = DateTime.UtcNow,
@@ -52,6 +63,7 @@ namespace JJServicios.Web.Controllers
 
         }
 
+        [AccessControlAttribute]
         private DataSourceResult GetIncomesDataResult(DataSourceRequest request, IQueryable<Income> incomes)
         {
             IQueryable<MovementType> movementType = _db.MovementType;
@@ -103,6 +115,7 @@ namespace JJServicios.Web.Controllers
             }
         }
 
+        [AccessControlAttribute]
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Income_Update([DataSourceRequest]DataSourceRequest request, IncomeExpenseViewModel income)
         {
@@ -110,11 +123,11 @@ namespace JJServicios.Web.Controllers
             {
                 var entity = new Income
                 {
-                    AgentId = 1,
+                    AgentId = AuthenticationHelper.AuthenticationHelper.GetAgentId(),
                     Id = income.Id,
                     Amount = income.Amount,
                     Observations = income.Observations,
-                    CreatedDate = income.CreatedDate,
+                    CreatedDate = income.CreatedDate.ToUniversalTime(),
                     UpdateDate = DateTime.UtcNow,
                     MovementTypeId = income.MovementTypeId
                 };
@@ -127,29 +140,24 @@ namespace JJServicios.Web.Controllers
             return Json(new[] { income }.ToDataSourceResult(request, ModelState));
         }
 
+        [AccessControlAttribute]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Income_Destroy([DataSourceRequest]DataSourceRequest request, IncomeExpenseViewModel income)
+        public ActionResult Income_Destroy([DataSourceRequest]DataSourceRequest request, IncomeExpenseViewModel serviceMovement)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var entity = new Income
-                {
-                    Id = income.Id,
-                    Amount = income.Amount,
-                    Observations = income.Observations,
-                    CreatedDate = income.CreatedDate,
-                    UpdateDate = income.UpdateDate,
-                    MovementTypeId = income.MovementTypeId
-                };
-
-                _db.Income.Attach(entity);
-                _db.Income.Remove(entity);
-                _db.SaveChanges();
+                _dbAdoRepository.DeleteItemById(serviceMovement.Id, "Income");
+            }
+            catch (Exception ex)
+            {
+                var exMessage = ex.Message;
             }
 
-            return Json(new[] { income }.ToDataSourceResult(request, ModelState));
+
+            return Json(new[] { serviceMovement }.ToDataSourceResult(request, ModelState));
         }
 
+        [AccessControlAttribute]
         [HttpPost]
         public ActionResult Excel_Export_Save(string contentType, string base64, string fileName)
         {

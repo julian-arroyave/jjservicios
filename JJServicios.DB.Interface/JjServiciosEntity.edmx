@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="JJServiciosModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="JJServiciosModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Agent">
           <Key>
             <PropertyRef Name="Id" />
@@ -121,6 +121,18 @@
           <Property Name="MovementTypeId" Type="bigint" Nullable="false" />
           <Property Name="EmployeeId" Type="bigint" Nullable="false" />
           <Property Name="AgentId" Type="bigint" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="UpdateDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WorkTimeLog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AgentId" Type="bigint" Nullable="false" />
+          <Property Name="StartDate" Type="datetime" Nullable="false" />
+          <Property Name="EndDate" Type="datetime" Nullable="false" />
+          <Property Name="Observations" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="UpdateDate" Type="datetime" Nullable="false" />
         </EntityType>
@@ -304,6 +316,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_WorkTimeLog_Agent">
+          <End Role="Agent" Type="Self.Agent" Multiplicity="1" />
+          <End Role="WorkTimeLog" Type="Self.WorkTimeLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agent">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkTimeLog">
+              <PropertyRef Name="AgentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="JJServiciosModelStoreContainer">
           <EntitySet Name="Agent" EntityType="Self.Agent" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
@@ -314,6 +338,7 @@
           <EntitySet Name="MovementType" EntityType="Self.MovementType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PaymentEmployee" EntityType="Self.PaymentEmployee" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ServiceMovement" EntityType="Self.ServiceMovement" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WorkTimeLog" EntityType="Self.WorkTimeLog" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Employee_Agent" Association="Self.FK_Employee_Agent">
             <End Role="Agent" EntitySet="Agent" />
             <End Role="Employee" EntitySet="Employee" />
@@ -374,9 +399,12 @@
             <End Role="MovementType" EntitySet="MovementType" />
             <End Role="ServiceMovement" EntitySet="ServiceMovement" />
           </AssociationSet>
+          <AssociationSet Name="FK_WorkTimeLog_Agent" Association="Self.FK_WorkTimeLog_Agent">
+            <End Role="Agent" EntitySet="Agent" />
+            <End Role="WorkTimeLog" EntitySet="WorkTimeLog" />
+          </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="JJServiciosModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -398,6 +426,7 @@
           <NavigationProperty Name="MovementType" Relationship="Self.FK_MovementType_Agent" FromRole="Agent" ToRole="MovementType" />
           <NavigationProperty Name="PaymentEmployee" Relationship="Self.FK_PaymentEmployee_Agent" FromRole="Agent" ToRole="PaymentEmployee" />
           <NavigationProperty Name="ServiceMovement" Relationship="Self.FK_ServiceMovement_Agent" FromRole="Agent" ToRole="ServiceMovement" />
+          <NavigationProperty Name="WorkTimeLog" Relationship="JJServiciosModel.FK_WorkTimeLog_Agent" FromRole="Agent" ToRole="WorkTimeLog" />
         </EntityType>
         <EntityType Name="Employee">
           <Key>
@@ -779,7 +808,37 @@
             <End Role="MovementType" EntitySet="MovementType" />
             <End Role="ServiceMovement" EntitySet="ServiceMovement" />
           </AssociationSet>
+          <EntitySet Name="WorkTimeLog" EntityType="JJServiciosModel.WorkTimeLog" />
+          <AssociationSet Name="FK_WorkTimeLog_Agent" Association="JJServiciosModel.FK_WorkTimeLog_Agent">
+            <End Role="Agent" EntitySet="Agent" />
+            <End Role="WorkTimeLog" EntitySet="WorkTimeLog" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="WorkTimeLog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AgentId" Type="Int64" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Observations" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Agent" Relationship="JJServiciosModel.FK_WorkTimeLog_Agent" FromRole="WorkTimeLog" ToRole="Agent" />
+        </EntityType>
+        <Association Name="FK_WorkTimeLog_Agent">
+          <End Type="JJServiciosModel.Agent" Role="Agent" Multiplicity="1" />
+          <End Type="JJServiciosModel.WorkTimeLog" Role="WorkTimeLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agent">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkTimeLog">
+              <PropertyRef Name="AgentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -911,6 +970,19 @@
                 <ScalarProperty Name="AgentId" ColumnName="AgentId" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WorkTimeLog">
+            <EntityTypeMapping TypeName="JJServiciosModel.WorkTimeLog">
+              <MappingFragment StoreEntitySet="WorkTimeLog">
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Observations" ColumnName="Observations" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="AgentId" ColumnName="AgentId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

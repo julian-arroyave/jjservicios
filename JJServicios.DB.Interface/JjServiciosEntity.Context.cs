@@ -7,6 +7,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System.Data.Entity.ModelConfiguration.Conventions;
+
 namespace JJServicios.DB.Contracts
 {
     using System;
@@ -18,11 +20,12 @@ namespace JJServicios.DB.Contracts
         public JJServiciosEntities()
             : base("name=JJServiciosEntities")
         {
+            Database.SetInitializer<JJServiciosEntities>(null);
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            throw new UnintentionalCodeFirstException();
+            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
         }
     
         public virtual DbSet<Agent> Agent { get; set; }
@@ -34,5 +37,6 @@ namespace JJServicios.DB.Contracts
         public virtual DbSet<MovementType> MovementType { get; set; }
         public virtual DbSet<PaymentEmployee> PaymentEmployee { get; set; }
         public virtual DbSet<ServiceMovement> ServiceMovement { get; set; }
+        public virtual DbSet<WorkTimeLog> WorkTimeLog { get; set; }
     }
 }

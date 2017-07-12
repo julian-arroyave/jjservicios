@@ -3,7 +3,10 @@
       .Name("grid")
       .Columns(columns =>
       {
-          columns.Bound(c => c.Name).Title("Nombre de Agente");
+          columns.Bound(c => c.Name).Title("Nombre del cargo");
+          columns.Bound(c => c.AgentId).Hidden(true);
+          columns.Bound(c => c.CreatedDate).Hidden(true);
+          columns.Bound(c => c.UpdateDate).Hidden(true);
           columns.Command(command =>
           {
               command.Edit()
@@ -22,12 +25,19 @@
       })
       .Filterable()
       .Scrollable()
+            .Events(events =>
+       {
+           events.SaveChanges("onSaveChanges");
+           events.Remove("onSaveChanges");
+           events.Save("onSaveChanges");
+           events.Edit("onSaveChanges");
+       })
       .DataSource(dataSource => dataSource
           .Ajax()
                     .Model(model =>
                     {
                         model.Id(p => p.Id);
-                        model.Field(fld => fld.UpdateDate).Editable(false);
+                        model.Field(fld => fld.CreatedDate).Editable(false);
                     })
           .Read(read => read.Action("EmployeePosition_Read", "EmployeePosition"))
           .Create(create => create.Action("EmployeePosition_Create", "EmployeePosition"))

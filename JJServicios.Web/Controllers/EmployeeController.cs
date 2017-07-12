@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using JJServicios.DB.Contracts;
+﻿using JJServicios.DB.Contracts.Repositories;
 ﻿using JJServicios.Web.Models;
 ﻿using Kendo.Mvc;
 
@@ -14,6 +15,14 @@ namespace JJServicios.Web.Controllers
     {
         private readonly JJServiciosEntities _db = new JJServiciosEntities();
 
+        private readonly IDeleteAdoRepository _dbAdoRepository;
+
+        public EmployeeController(IDeleteAdoRepository dbAdoRepository)
+        {
+            _dbAdoRepository = dbAdoRepository;
+        }
+
+        [AccessControlAttribute]
         public ActionResult Index()
         {
             IQueryable<MovementType> movementTypes = _db.MovementType;
@@ -28,6 +37,7 @@ namespace JJServicios.Web.Controllers
             return View();
         }
 
+        [AccessControlAttribute]
         public ActionResult Employee_Read([DataSourceRequest]DataSourceRequest request)
         {
             IQueryable<Employee> employees = _db.Employee;
@@ -59,15 +69,16 @@ namespace JJServicios.Web.Controllers
             return Json(result);
         }
 
+        [AccessControlAttribute]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Employee_Create([DataSourceRequest]DataSourceRequest request, Employee employee)
+        public ActionResult Employee_Create([DataSourceRequest]DataSourceRequest request, EmployeeViewModel employee)
         {
             if (ModelState.IsValid)
             {
                 var entity = new Employee
                 {
-                    AgentId = 1,
-                    Identification = employee.Identification,
+                    AgentId = AuthenticationHelper.AuthenticationHelper.GetAgentId(),
+                Identification = employee.Identification,
                     Name = employee.Name,
                     FinancialNumber = employee.FinancialNumber,
                     Mobile = employee.Mobile,
@@ -94,14 +105,15 @@ namespace JJServicios.Web.Controllers
             return Json(new[] { employee }.ToDataSourceResult(request, ModelState));
         }
 
+        [AccessControlAttribute]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Employee_Update([DataSourceRequest]DataSourceRequest request, Employee employee)
+        public ActionResult Employee_Update([DataSourceRequest]DataSourceRequest request, EmployeeViewModel employee)
         {
             if (ModelState.IsValid)
             {
                 var entity = new Employee
                 {
-                    AgentId = 1,
+                    AgentId = AuthenticationHelper.AuthenticationHelper.GetAgentId(),
                     Id = employee.Id,
                     Identification = employee.Identification,
                     Name = employee.Name,
@@ -118,7 +130,7 @@ namespace JJServicios.Web.Controllers
                     EmployeePositionId = employee.EmployeePositionId,
                     FinancialAccountId = employee.FinancialAccountId,
                     Birthdate = employee.Birthdate,
-                    CreatedDate = employee.CreatedDate,
+                    CreatedDate = employee.CreatedDate.ToUniversalTime(),
                     UpdateDate =  DateTime.UtcNow
 
                 };
@@ -131,39 +143,16 @@ namespace JJServicios.Web.Controllers
             return Json(new[] { employee }.ToDataSourceResult(request, ModelState));
         }
 
+        [AccessControlAttribute]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Employee_Destroy([DataSourceRequest]DataSourceRequest request, Employee employee)
+        public ActionResult Employee_Destroy([DataSourceRequest]DataSourceRequest request, Employee serviceMovement)
         {
-            if (ModelState.IsValid)
-            {
-                var entity = new Employee
-                {
-                    Id = employee.Id,
-                    Identification = employee.Identification,
-                    Name = employee.Name,
-                    FinancialNumber = employee.FinancialNumber,
-                    Mobile = employee.Mobile,
-                    OtherPhone = employee.OtherPhone,
-                    WhatsApp = employee.WhatsApp,
-                    Skype = employee.Skype,
-                    CorporateEmail = employee.CorporateEmail,
-                    OtherEmail = employee.OtherEmail,
-                    ResidenceCity = employee.ResidenceCity,
-                    Address = employee.Address,
-                    Active = false,
-                    Birthdate = employee.Birthdate,
-                    CreatedDate = employee.CreatedDate,
-                    UpdateDate = employee.UpdateDate,
-                };
+            _dbAdoRepository.DeleteItemById(serviceMovement.Id, "Employee");
 
-                _db.Employee.Attach(entity);
-                _db.Employee.Remove(entity);
-                _db.SaveChanges();
-            }
-
-            return Json(new[] { employee }.ToDataSourceResult(request, ModelState));
+            return Json(new[] { serviceMovement }.ToDataSourceResult(request, ModelState));
         }
 
+        [AccessControlAttribute]
         [HttpPost]
         public ActionResult Excel_Export_Save(string contentType, string base64, string fileName)
         {

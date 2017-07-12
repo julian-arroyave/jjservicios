@@ -1,23 +1,4 @@
-﻿
-<style type="text/css">
-    input, textarea, select, button {
-    text-rendering: auto;
-    color: initial;
-    letter-spacing: normal;
-    word-spacing: normal;
-    text-transform: none;
-    text-indent: 0px;
-    text-shadow: none;
-    display: inline-block;
-    text-align: left;
-    margin: 0em;
-    font: 13.3333px Arial;
-}
-</style>
-
-
-
-    @(Html.Kendo().Grid<JJServicios.DB.Contracts.FinancialAccount>()
+﻿    @(Html.Kendo().Grid<JJServicios.DB.Contracts.FinancialAccount>()
       .Name("grid")
       .Columns(columns =>
       {
@@ -43,12 +24,20 @@
       })
       .Filterable()
       .Scrollable()
+            .Events(events =>
+       {
+           events.SaveChanges("onSaveChanges");
+           events.Remove("onSaveChanges");
+           events.Save("onSaveChanges");
+           events.Edit("onSaveChanges");
+       })
       .DataSource(dataSource => dataSource
           .Ajax()
+          .Sort(sort => sort.Add("CreatedDate").Descending())
           .Model(model =>
           {
               model.Id(p => p.Id);
-              model.Field(fld => fld.UpdateDate).Editable(false);
+              model.Field(fld => fld.CreatedDate).Editable(false);
           })
           .Read(read => read.Action("FinancialAccount_Read", "FinancialAccount"))
           .Update(update => update.Action("FinancialAccount_Update", "FinancialAccount"))

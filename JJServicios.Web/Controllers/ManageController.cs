@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
+using System.Web.Security;
+using JJServicios.DB.Contracts;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
@@ -10,11 +14,11 @@ using JJServicios.Web.Models;
 
 namespace JJServicios.Web.Controllers
 {
-    [Authorize]
     public class ManageController : Controller
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private readonly JJServiciosEntities _db = new JJServiciosEntities();
 
         public ManageController()
         {
@@ -55,10 +59,10 @@ namespace JJServicios.Web.Controllers
         public async Task<ActionResult> Index(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
-                message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
-                : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
+                message == ManageMessageId.ChangePasswordSuccess ? "Tu contraseña ha sido cambiada"
+                : message == ManageMessageId.SetPasswordSuccess ? "Tu contraseña ha sido configurada"
                 : message == ManageMessageId.SetTwoFactorSuccess ? "Your two-factor authentication provider has been set."
-                : message == ManageMessageId.Error ? "An error has occurred."
+                : message == ManageMessageId.Error ? "Ha ocurrido un error"
                 : message == ManageMessageId.AddPhoneSuccess ? "Your phone number was added."
                 : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
                 : "";
@@ -66,11 +70,7 @@ namespace JJServicios.Web.Controllers
             var userId = User.Identity.GetUserId();
             var model = new IndexViewModel
             {
-                HasPassword = HasPassword(),
-                PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
-                TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
-                Logins = await UserManager.GetLoginsAsync(userId),
-                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
+                HasPassword = true
             };
             return View(model);
         }
@@ -223,24 +223,41 @@ namespace JJServicios.Web.Controllers
         //
         // POST: /Manage/ChangePassword
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [AccessControlAttribute]
         public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-            var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
-            if (result.Succeeded)
+
+            if (ModelState.IsValid)
             {
-                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-                if (user != null)
+                var name = AuthenticationHelper.AuthenticationHelper.GetUserName();
+                IQueryable<Agent> agents = _db.Agent;
+
+                var oldPasswordByteArray = System.Text.Encoding.UTF8.GetBytes(model.OldPassword);
+                var oldPassword = System.Convert.ToBase64String(oldPasswordByteArray);
+
+                agents = agents.Where(x => x.Name == name && x.Password == oldPassword);
+
+                if (agents.Any())
                 {
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    var currentAgent = agents.First();
+
+                    var newPasswordByteArray = System.Text.Encoding.UTF8.GetBytes(model.OldPassword);
+                    var newPassword = System.Convert.ToBase64String(oldPasswordByteArray);
+
+                    currentAgent.Password = newPassword;
+
+                    _db.Agent.Attach(currentAgent);
+                    _db.Entry(currentAgent).State = EntityState.Modified;
+                    _db.SaveChanges();
+                    return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
                 }
-                return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
             }
-            AddErrors(result);
+
+            ModelState.AddModelError("", "El cambio de contraseña no tuvo éxito, revise los datos e intente de nuevo");
             return View(model);
         }
 

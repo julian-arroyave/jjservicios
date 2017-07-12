@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
+using System.Web.Security;
+using JJServicios.DB.Contracts;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
@@ -17,6 +18,7 @@ namespace JJServicios.Web.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private readonly JJServiciosEntities _db = new JJServiciosEntities();
 
         public AccountController()
         {
@@ -26,6 +28,14 @@ namespace JJServicios.Web.Controllers
         {
             UserManager = userManager;
             SignInManager = signInManager;
+        }
+
+
+        [AllowAnonymous]
+        public ActionResult Logout()
+        {
+            FormsAuthentication.SignOut();
+            return RedirectToAction("Index", "Home");
         }
 
         public ApplicationSignInManager SignInManager
@@ -73,9 +83,9 @@ namespace JJServicios.Web.Controllers
                 return View(model);
             }
 
-            // This doesn't count login failures towards account lockout
-            // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+
+
+        var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -451,6 +461,34 @@ namespace JJServicios.Web.Controllers
             }
             return RedirectToAction("Index", "Home");
         }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public ActionResult LoginJj(LoginJjViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                IQueryable<Agent> agents = _db.Agent;
+
+                var passwordByteArray = System.Text.Encoding.UTF8.GetBytes(model.Password);
+                var password = System.Convert.ToBase64String(passwordByteArray);
+
+                var user = agents.Where(x => x.Name == model.Name && x.Password == password);
+
+                if (user.Any())
+                {
+                    var name = user.First().Name;
+                    ViewBag.Name = name;
+                    FormsAuthentication.SetAuthCookie(user.First().Name, false);
+                    HttpRuntime.Cache.Insert(name, user.First(), null,
+                        DateTime.Now.AddDays(
+                           Convert.ToInt16(WebConfigurationManager.AppSettings["UserSessionTimeExpiration"])),
+                        System.Web.Caching.Cache.NoSlidingExpiration);                    
+                }
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
 
         internal class ChallengeResult : HttpUnauthorizedResult
         {

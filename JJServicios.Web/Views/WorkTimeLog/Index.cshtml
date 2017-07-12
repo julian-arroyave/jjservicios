@@ -1,0 +1,64 @@
+﻿@using JJServicios.Web.Models
+<h1>Imputación de horas</h1>
+
+@(Html.Kendo().Grid<WorkTimeLogViewModel>()
+      .Name("grid")
+      .Columns(columns =>
+      {
+          columns.Bound(c => c.Agent).Filterable(false); ;
+          columns.Bound(c => c.Id).Hidden(true);
+          columns.Bound(c => c.Observations).Title("Resumen de la actividad").Filterable(false);
+          columns.Bound(c => c.CreatedDate).Width(170).Title("Fecha de imputación").ClientTemplate("#=kendo.toString(CreatedDate,'yyyy-MM-dd h:mm:ss tt')#").Filterable(filterable => filterable.Extra(true).Operators(operators => operators.ForDate(str => str.Clear()
+.IsGreaterThanOrEqualTo("Mayor o igual a")
+.IsLessThanOrEqualTo("Menor o igual a"))));
+          columns.Bound(c => c.StartDate).Title("Inicio del trabajo").Width(175).Filterable(false).ClientTemplate("#=kendo.toString(StartDate,'yyyy-MM-dd h:mm:ss tt')#");
+          columns.Bound(c => c.EndDate).Title("Fin del trabajo").Width(175).Filterable(false).ClientTemplate("#=kendo.toString(EndDate,'yyyy-MM-dd h:mm:ss tt')#");
+          columns.Bound(c => c.WorkedHours).Filterable(false).Width(60);
+          columns.Command(command =>
+          {
+            //  command.Edit().Text(" ").UpdateText(" ").CancelText(" ");
+          }).Width(160);
+      })
+      .ToolBar(toolbar => {
+          toolbar.Create().Text("Nuevo");
+      })
+      .Pageable()
+            .Editable(editable => editable.Mode(GridEditMode.PopUp))
+            .Events(events =>
+            {
+                events.SaveChanges("onSaveChanges");
+                events.Remove("onSaveChanges");
+                events.Save("onSaveChanges");
+                events.Edit("onSaveChanges");
+                events.Edit("editChange");
+            })
+       .Filterable()
+      .DataSource(dataSource => dataSource
+          .Ajax()
+          .Sort(sort => sort.Add("CreatedDate").Descending())
+          .Model(model =>
+          {
+              model.Id(p => p.Id);
+              model.Field(fld => fld.CreatedDate).Editable(false);
+              model.Field(fld => fld.Agent).Editable(false);
+              model.Field(fld => fld.WorkedHours).Editable(false);
+          })
+          .Read(read => read.Action("WorkTimeLog_Read", "WorkTimeLog"))
+          .Create(create => create.Action("WorkTimeLog_Create", "WorkTimeLog"))
+          .Update(update => update.Action("WorkTimeLog_Update", "WorkTimeLog"))
+          .Destroy(destroy => destroy.Action("WorkTimeLog_Destroy", "WorkTimeLog"))
+      )
+)
+
+<script type="text/javascript">
+    
+    function editChange(e) {
+
+        if (e.model.isNew() == false) {
+            $("#WorkedHours").attr("readonly", true);
+        }
+
+
+    }
+
+</script>

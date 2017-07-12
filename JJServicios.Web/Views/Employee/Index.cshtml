@@ -2,6 +2,7 @@
 <h1>Empleados</h1>
 @(Html.Kendo().Grid<EmployeeViewModel>()
       .Name("grid")
+      .HtmlAttributes(new { style = "height:550px;" })
       .Columns(columns =>
       {
 
@@ -19,14 +20,13 @@
           columns.Bound(c => c.EmployeePositionId);
           columns.Bound(c => c.FinancialAccount).Title("Entidad financiera").Sortable(false).Filterable(filterable => filterable.Extra(false).UI("financialAccountFilter").Operators(operators => operators.ForString(str => str.Clear().Contains("Contiene"))));
           columns.Bound(c => c.FinancialAccountId);
-          columns.Bound(c => c.EmployeePositionId);
           columns.Bound(c => c.Address).Title("Dirección"); ;
           columns.Bound(c => c.Active).Visible(false); ;
           columns.Bound(c => c.Birthdate).Width(90).Title("Cumpleaños").ClientTemplate("#=kendo.toString(UpdateDate,'yyyy-MM-dd')#").Filterable(filterable => filterable.Extra(true).Operators(operators => operators.ForDate(str => str.Clear()
           .IsGreaterThanOrEqualTo("Mayor o igual a")
           .IsLessThanOrEqualTo("Menor o igual a"))));
           columns.Bound(c => c.CreatedDate).Width(90).Title("Fecha de creación").ClientTemplate("#=kendo.toString(UpdateDate,'yyyy-MM-dd')#");
-          columns.Bound(c => c.UpdateDate).Width(90).Title("Fecha de actualización").ClientTemplate("#=kendo.toString(UpdateDate,'yyyy-MM-dd')#");
+          columns.Bound(c => c.UpdateDate).Hidden(true).Width(90).Title("Fecha de actualización").ClientTemplate("#=kendo.toString(UpdateDate,'yyyy-MM-dd')#");
           columns.Command(command =>
           {
               command.Edit()

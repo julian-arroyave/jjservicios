@@ -91,9 +91,13 @@
       <DependentUpon>JjServiciosEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\DeleteAdoRepository.cs" />
     <Compile Include="Repositories\GenericRepository.cs" />
     <Compile Include="IUnitOfWork.cs" />
     <Compile Include="ServiceMovement.cs">
+      <DependentUpon>JjServiciosEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="WorkTimeLog.cs">
       <DependentUpon>JjServiciosEntity.tt</DependentUpon>
     </Compile>
   </ItemGroup>

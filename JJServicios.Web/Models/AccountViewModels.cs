@@ -62,6 +62,19 @@ namespace JJServicios.Web.Models
         public bool RememberMe { get; set; }
     }
 
+    public class LoginJjViewModel
+    {
+        [Required]
+        [Display(Name = "UserName")]
+        public string Name { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "Password")]
+        public string Password { get; set; }
+    }
+
+
     public class RegisterViewModel
     {
         [Required]

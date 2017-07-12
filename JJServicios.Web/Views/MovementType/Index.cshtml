@@ -21,13 +21,20 @@
           sortable.SortMode(GridSortMode.SingleColumn);
       })
       .Filterable()
-      .Scrollable()
+            .Events(events =>
+       {
+           events.SaveChanges("onSaveChanges");
+           events.Remove("onSaveChanges");
+           events.Save("onSaveChanges");
+           events.Edit("onSaveChanges");
+       })
       .DataSource(dataSource => dataSource
           .Ajax()
+          .Sort(sort => sort.Add("CreatedDate").Descending())
           .Model(model =>
           {
               model.Id(p => p.Id);
-              model.Field(fld => fld.UpdateDate).Editable(false);
+              model.Field(fld => fld.CreatedDate).Editable(false);
           })
           .Read(read => read.Action("MovementType_Read", "MovementType"))
           .Create(create => create.Action("MovementType_Create", "MovementType"))

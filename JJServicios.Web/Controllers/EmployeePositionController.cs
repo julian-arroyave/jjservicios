@@ -9,6 +9,8 @@ using System.Web.Mvc;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using JJServicios.DB.Contracts;
+﻿using JJServicios.DB.Contracts.Repositories;
+﻿using JJServicios.Web.Models;
 
 namespace JJServicios.Web.Controllers
 {
@@ -16,24 +18,34 @@ namespace JJServicios.Web.Controllers
     {
         private JJServiciosEntities db = new JJServiciosEntities();
 
+        private readonly IDeleteAdoRepository _dbAdoRepository;
+
+        public EmployeePositionController(IDeleteAdoRepository dbAdoRepository)
+        {
+            _dbAdoRepository = dbAdoRepository;
+        }
+        [AccessControlAttribute]
         public ActionResult Index()
         {
             return View();
         }
-
+        [AccessControlAttribute]
         public ActionResult EmployeePosition_Read([DataSourceRequest]DataSourceRequest request)
         {
             IQueryable<EmployeePosition> employeeposition = db.EmployeePosition;
             DataSourceResult result = employeeposition.ToDataSourceResult(request, employeePosition => new {
-                Id = employeePosition.Id,
-                Name = employeePosition.Name,
-                CreatedDate = employeePosition.CreatedDate,
-                UpdateDate = employeePosition.UpdateDate,
+                employeePosition.Id,
+                employeePosition.Name,
+                CreatedDate = employeePosition.CreatedDate.ToLocalTime(),
+                UpdateDate = employeePosition.UpdateDate.ToLocalTime(),
+                employeePosition.AgentId
+
             });
 
             return Json(result);
         }
 
+        [AccessControlAttribute]
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult EmployeePosition_Create([DataSourceRequest]DataSourceRequest request, EmployeePosition employeePosition)
         {
@@ -41,7 +53,7 @@ namespace JJServicios.Web.Controllers
             {
                 var entity = new EmployeePosition
                 {
-                    AgentId = 1,
+                    AgentId = AuthenticationHelper.AuthenticationHelper.GetAgentId(),
                     Name = employeePosition.Name,
                     UpdateDate = DateTime.UtcNow,
                     CreatedDate = DateTime.UtcNow
@@ -55,6 +67,7 @@ namespace JJServicios.Web.Controllers
             return Json(new[] { employeePosition }.ToDataSourceResult(request, ModelState));
         }
 
+        [AccessControlAttribute]
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult EmployeePosition_Update([DataSourceRequest]DataSourceRequest request, EmployeePosition employeePosition)
         {
@@ -62,10 +75,11 @@ namespace JJServicios.Web.Controllers
             {
                 var entity = new EmployeePosition
                 {
+                    AgentId = AuthenticationHelper.AuthenticationHelper.GetAgentId(),
                     Id = employeePosition.Id,
                     Name = employeePosition.Name,
-                    CreatedDate = employeePosition.CreatedDate,
-                    UpdateDate = employeePosition.UpdateDate,
+                    CreatedDate = employeePosition.CreatedDate.ToUniversalTime(),
+                    UpdateDate = DateTime.UtcNow,
                 };
 
                 db.EmployeePosition.Attach(entity);
@@ -76,27 +90,24 @@ namespace JJServicios.Web.Controllers
             return Json(new[] { employeePosition }.ToDataSourceResult(request, ModelState));
         }
 
+        [AccessControlAttribute]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult EmployeePosition_Destroy([DataSourceRequest]DataSourceRequest request, EmployeePosition employeePosition)
+        public ActionResult EmployeePosition_Destroy([DataSourceRequest]DataSourceRequest request, EmployeePosition serviceMovement)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var entity = new EmployeePosition
-                {
-                    Id = employeePosition.Id,
-                    Name = employeePosition.Name,
-                    CreatedDate = employeePosition.CreatedDate,
-                    UpdateDate = employeePosition.UpdateDate,
-                };
-
-                db.EmployeePosition.Attach(entity);
-                db.EmployeePosition.Remove(entity);
-                db.SaveChanges();
+                _dbAdoRepository.DeleteItemById(serviceMovement.Id, "EmployeePosition");
+            }
+            catch (Exception ex)
+            {
+                var exMessage = ex.Message;
             }
 
-            return Json(new[] { employeePosition }.ToDataSourceResult(request, ModelState));
+
+            return Json(new[] { serviceMovement }.ToDataSourceResult(request, ModelState));
         }
 
+        [AccessControlAttribute]
         [HttpPost]
         public ActionResult Excel_Export_Save(string contentType, string base64, string fileName)
         {
@@ -104,7 +115,8 @@ namespace JJServicios.Web.Controllers
 
             return File(fileContents, contentType, fileName);
         }
-    
+
+        [AccessControlAttribute]
         [HttpPost]
         public ActionResult Pdf_Export_Save(string contentType, string base64, string fileName)
         {
