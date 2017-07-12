@@ -1,75 +1,86 @@
 ﻿@using JJServicios.Web.Models
 
-<h1>Salidas</h1>
+@{
+    var bankAccountId = HttpContext.Current.Request["bankAccountId"];
 
-@(Html.Kendo().Grid<IncomeExpenseViewModel>()
-      .Name("grid")
-      .HtmlAttributes(new { style = "height:500px;" })
-      .Columns(columns =>
-      {
-          columns.Bound(c => c.Amount).Title("Cantidad");
-          columns.Bound(c => c.Observations).Title("Observaciones");
-          columns.Bound(c => c.MovementType).Title("Tipo de movimiento").Sortable(false).Filterable(filterable => filterable.Extra(false).UI("movementTypesFilter").Operators(operators => operators.ForString(str => str.Clear().Contains("Contiene")))
-              );
-          columns.Bound(c => c.UpdateDate).Hidden();
-          columns.Bound(c => c.CreatedDate).Title("Fecha de creación").ClientTemplate("#=kendo.toString(CreatedDate,'yyyy-MM-dd h:mm:ss tt')#").Filterable(filterable => filterable.Extra(true).Operators(operators => operators.ForDate(str => str.Clear()
-          .IsGreaterThanOrEqualTo("Mayor o igual a")
-          .IsLessThanOrEqualTo("Menor o igual a"))));
-          columns.Command(command =>
+}
+
+@if (!string.IsNullOrEmpty(bankAccountId))
+{
+    var bankAccountsDictionary = (Dictionary<string, string>)ViewData["bankAccountsDiciontary"];
+
+    <h1>Salidas  @bankAccountsDictionary[bankAccountId] </h1>
+
+    @(Html.Kendo().Grid<IncomeExpenseViewModel>()
+          .Name("grid")
+          .HtmlAttributes(new {style = "height:500px;"})
+          .Columns(columns =>
           {
-              command.Edit()
-    .Text(" ").UpdateText(" ").CancelText(" ");
-              command.Destroy().Text(" ");
-          }).Width(160);
-      })
-      .ToolBar(toolbar =>
-      {
-          toolbar.Create().Text("Nuevo");
-          toolbar.Excel().Text("Exportar a excel");
-      })
-      .Filterable()
-      .Editable(editable => editable.Mode(GridEditMode.InLine))
-      .Pageable()
-      .Selectable(selectable =>
-      {
-          selectable.Mode(GridSelectionMode.Single);
-          selectable.Type(GridSelectionType.Row);
-      })
-      .Sortable(sortable =>
-      {
-          sortable.SortMode(GridSortMode.SingleColumn);
-      })
-      .Scrollable()
-      .Events(events =>
-       {
-           events.SaveChanges("onSaveChanges");
-           events.Remove("onSaveChanges");
-           events.Save("onSaveChanges");
-           events.Edit("onSaveChanges");
-       })
-      .DataSource(dataSource => dataSource
-          .Ajax()
-          .Sort(sort => sort.Add("CreatedDate").Descending())
-          .Model(model =>
-          {
-              model.Id(p => p.Id);
-              model.Field(fld => fld.CreatedDate).Editable(false);
+              columns.Bound(c => c.BankAccountId).Hidden(true);
+              columns.Bound(c => c.Amount).Title("Cantidad");
+              columns.Bound(c => c.Observations).Title("Observaciones");
+              columns.Bound(c => c.MovementType).Title("Tipo de movimiento").Sortable(false).Filterable(filterable => filterable.Extra(false).UI("movementTypesFilter").Operators(operators => operators.ForString(str => str.Clear().Contains("Contiene")))
+                  );
+              columns.Bound(c => c.UpdateDate).Hidden();
+              columns.Bound(c => c.CreatedDate).Title("Fecha de creación").ClientTemplate("#=kendo.toString(CreatedDate,'yyyy-MM-dd h:mm:ss tt')#").Filterable(filterable => filterable.Extra(true).Operators(operators => operators.ForDate(str => str.Clear()
+                  .IsGreaterThanOrEqualTo("Mayor o igual a")
+                  .IsLessThanOrEqualTo("Menor o igual a"))));
+              columns.Command(command =>
+              {
+                  command.Edit()
+                      .Text(" ").UpdateText(" ").CancelText(" ");
+                  command.Destroy().Text(" ");
+              }).Width(160);
           })
-          .Read(read => read.Action("Expense_Read", "Expense"))
-          .Create(create => create.Action("Expense_Create", "Expense"))
-          .Update(update => update.Action("Expense_Update", "Expense"))
-          .Destroy(destroy => destroy.Action("Expense_Destroy", "Expense"))
-      )
-      )
+          .ToolBar(toolbar =>
+          {
+              toolbar.Create().Text("Nuevo");
+              toolbar.Excel().Text("Exportar a excel");
+          })
+          .Filterable()
+          .Editable(editable => editable.Mode(GridEditMode.InLine))
+          .Pageable()
+          .Selectable(selectable =>
+          {
+              selectable.Mode(GridSelectionMode.Single);
+              selectable.Type(GridSelectionType.Row);
+          })
+          .Sortable(sortable =>
+          {
+              sortable.SortMode(GridSortMode.SingleColumn);
+          })
+          .Scrollable()
+          .Events(events =>
+          {
+              events.SaveChanges("onSaveChanges");
+              events.Remove("onSaveChanges");
+              events.Save("onSaveChanges");
+              events.Edit("onSaveChanges");
+          })
+          .DataSource(dataSource => dataSource
+              .Ajax()
+              .Sort(sort => sort.Add("CreatedDate").Descending())
+              .Model(model =>
+              {
+                  model.Id(p => p.Id);
+                  model.Field(fld => fld.CreatedDate).Editable(false);
+              })
+              .Read(read => read.Action("Expense_Read", "Expense", new {bankAccountId}))
+              .Create(create => create.Action("Expense_Create", "Expense", new { bankAccountId }))
+              .Update(update => update.Action("Expense_Update", "Expense"))
+              .Destroy(destroy => destroy.Action("Expense_Destroy", "Expense"))
+          )
+          )
 
-<script type="text/javascript">
-    function movementTypesFilter(element) {
-        element.kendoAutoComplete({
-            dataSource: {
-                transport: {
-                    read: "@Url.Action("GetMovementTypes", "Ajax")"
+    <script type="text/javascript">
+        function movementTypesFilter(element) {
+            element.kendoAutoComplete({
+                dataSource: {
+                    transport: {
+                        read: "@Url.Action("GetMovementTypes", "Ajax")"
+                    }
                 }
-            }
-        });
-    }
-</script>
+            });
+        }
+    </script>
+}

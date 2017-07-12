@@ -1,58 +1,70 @@
 ﻿@using JJServicios.Web.Models
 
-<h1>Salidas por servicios</h1>
+@{
+    var bankAccountId = HttpContext.Current.Request["bankAccountId"];
+}
 
-@(Html.Kendo().Grid<ServiceMovementViewModel>()
-      .Name("grid")
-      .HtmlAttributes(new { style = "height:500px;" })
-      .Columns(columns =>
-      {
-          columns.Bound(c => c.City).Title("Ciudad").Width(100);
-          columns.Bound(c => c.STFRequirement).Title("Requerimiento"); ;
-          columns.Bound(c => c.Amount).Title("Cantidad").Width(100);
-          columns.Bound(c => c.Observations).Title("Observaciones");
-          columns.Bound(c => c.MovementType).Title("Tipo de movimiento").Sortable(false).Filterable(filterable => filterable.Extra(false).UI("movementTypesFilter").Operators(operators => operators.ForString(str => str.Clear().Contains("Contiene")))
-              );
-          columns.Bound(c => c.Employee).Title("Empleado").Sortable(false).Filterable(filterable => filterable.Extra(false).UI("employeesFilter").Operators(operators => operators.ForString(str => str.Clear().Contains("Contiene"))));
-          columns.Bound(c => c.Support).Title("Soporte");
-          columns.Bound(c => c.UpdateDate).Hidden();
-          columns.Bound(c => c.CreatedDate).Width(90).Title("Fecha").ClientTemplate("#=kendo.toString(CreatedDate,'yyyy-MM-dd')#").Filterable(filterable => filterable.Extra(true).Operators(operators => operators.ForDate(str => str.Clear()
-          .IsGreaterThanOrEqualTo("Mayor o igual a")
-          .IsLessThanOrEqualTo("Menor o igual a"))));
-          columns.Command(command => { command.Edit()
-                                       .Text(" ").UpdateText(" ").CancelText(" ");
-               command.Destroy().Text(" "); }).Width(160);
-      })
-      .ToolBar(toolbar => {
-          toolbar.Create().Text("Nuevo");
-          toolbar.Excel().Text("Exportar a excel");
-      })
-      .Editable(editable => editable.Mode(GridEditMode.InLine))
-      .Pageable()
-      .Sortable(sortable => {
-          sortable.SortMode(GridSortMode.SingleColumn);
-      })
-      .Filterable()
-      .Scrollable()
-      .Events(events =>
-       {
-           events.SaveChanges("onSaveChanges");
-           events.Remove("onSaveChanges");
-           events.Save("onSaveChanges");
-           events.Edit("onSaveChanges");
-       })
-      .DataSource(dataSource => dataSource
-          .Ajax()
-          .Sort(sort => sort.Add("UpdateDate").Descending())
-           .Sort(sort => sort.Add("CreatedDate").Descending())
-          .Model(model =>
+@if (!string.IsNullOrEmpty(bankAccountId))
+{
+    var bankAccountsDictionary = (Dictionary<string, string>)ViewData["bankAccountsDiciontary"];
+
+    <h1>Salidas por servicios en @bankAccountsDictionary[bankAccountId] </h1>
+
+    @(Html.Kendo().Grid<ServiceMovementViewModel>()
+          .Name("grid")
+          .HtmlAttributes(new {style = "height:500px;"})
+          .Columns(columns =>
           {
-              model.Id(p => p.Id);
-              model.Field(fld => fld.CreatedDate).Editable(false);
+              columns.Bound(c => c.City).Title("Ciudad").Width(100);
+              columns.Bound(c => c.STFRequirement).Title("Requerimiento");
+              columns.Bound(c => c.Amount).Title("Cantidad").Width(100);
+              columns.Bound(c => c.Observations).Title("Observaciones");
+              columns.Bound(c => c.MovementType).Title("Tipo de movimiento").Sortable(false).Filterable(filterable => filterable.Extra(false).UI("movementTypesFilter").Operators(operators => operators.ForString(str => str.Clear().Contains("Contiene")))
+                  );
+              columns.Bound(c => c.Employee).Title("Empleado").Sortable(false).Filterable(filterable => filterable.Extra(false).UI("employeesFilter").Operators(operators => operators.ForString(str => str.Clear().Contains("Contiene"))));
+              columns.Bound(c => c.Support).Title("Soporte");
+              columns.Bound(c => c.UpdateDate).Hidden();
+              columns.Bound(c => c.CreatedDate).Width(90).Title("Fecha").ClientTemplate("#=kendo.toString(CreatedDate,'yyyy-MM-dd')#").Filterable(filterable => filterable.Extra(true).Operators(operators => operators.ForDate(str => str.Clear()
+                  .IsGreaterThanOrEqualTo("Mayor o igual a")
+                  .IsLessThanOrEqualTo("Menor o igual a"))));
+              columns.Command(command =>
+              {
+                  command.Edit()
+                      .Text(" ").UpdateText(" ").CancelText(" ");
+                  command.Destroy().Text(" ");
+              }).Width(160);
           })
-          .Read(read => read.Action("ServiceMovement_Read", "ServiceMovement"))
-          .Create(create => create.Action("ServiceMovement_Create", "ServiceMovement"))
-          .Update(update => update.Action("ServiceMovement_Update", "ServiceMovement"))
-          .Destroy(destroy => destroy.Action("ServiceMovement_Destroy", "ServiceMovement"))
-      )
-)
+          .ToolBar(toolbar =>
+          {
+              toolbar.Create().Text("Nuevo");
+              toolbar.Excel().Text("Exportar a excel");
+          })
+          .Editable(editable => editable.Mode(GridEditMode.InLine))
+          .Pageable()
+          .Sortable(sortable => {
+              sortable.SortMode(GridSortMode.SingleColumn);
+          })
+          .Filterable()
+          .Scrollable()
+          .Events(events =>
+          {
+              events.SaveChanges("onSaveChanges");
+              events.Remove("onSaveChanges");
+              events.Save("onSaveChanges");
+              events.Edit("onSaveChanges");
+          })
+          .DataSource(dataSource => dataSource
+              .Ajax()
+              .Sort(sort => sort.Add("CreatedDate").Descending())
+              .Model(model =>
+              {
+                  model.Id(p => p.Id);
+                  model.Field(fld => fld.CreatedDate).Editable(false);
+              })
+              .Read(read => read.Action("ServiceMovement_Read", "ServiceMovement", new { bankAccountId }))
+              .Create(create => create.Action("ServiceMovement_Create", "ServiceMovement", new { bankAccountId }))
+              .Update(update => update.Action("ServiceMovement_Update", "ServiceMovement"))
+              .Destroy(destroy => destroy.Action("ServiceMovement_Destroy", "ServiceMovement"))
+          )
+          )
+}

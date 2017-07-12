@@ -22,13 +22,15 @@ namespace JJServicios.DB.Contracts
         {
             Database.SetInitializer<JJServiciosEntities>(null);
         }
-    
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
         }
-    
+
+
         public virtual DbSet<Agent> Agent { get; set; }
+        public virtual DbSet<BankAccount> BankAccount { get; set; }
         public virtual DbSet<Employee> Employee { get; set; }
         public virtual DbSet<EmployeePosition> EmployeePosition { get; set; }
         public virtual DbSet<Expense> Expense { get; set; }

@@ -13,7 +13,7 @@
           columns.Bound(c => c.OtherPhone).Title("Otro teléfono");
           columns.Bound(c => c.WhatsApp).Title("WhatsApp");
           columns.Bound(c => c.Skype);
-          columns.Bound(c => c.CorporateEmail).Title("Email corporativo"); 
+          columns.Bound(c => c.CorporateEmail).Title("Email corporativo");
           columns.Bound(c => c.OtherEmail).Title("Otro email"); ;
           columns.Bound(c => c.ResidenceCity).Title("Ciudad de residencia");
           columns.Bound(c => c.EmployeePosition).Title("Cargo").Sortable(false).Filterable(filterable => filterable.Extra(false).UI("employeePositionFilter").Operators(operators => operators.ForString(str => str.Clear().Contains("Contiene"))));
@@ -22,10 +22,10 @@
           columns.Bound(c => c.FinancialAccountId);
           columns.Bound(c => c.Address).Title("Dirección"); ;
           columns.Bound(c => c.Active).Visible(false); ;
-          columns.Bound(c => c.Birthdate).Width(90).Title("Cumpleaños").ClientTemplate("#=kendo.toString(UpdateDate,'yyyy-MM-dd')#").Filterable(filterable => filterable.Extra(true).Operators(operators => operators.ForDate(str => str.Clear()
+          columns.Bound(c => c.Birthdate).Width(90).Title("Cumpleaños").ClientTemplate("#=kendo.toString(Birthdate,'yyyy-MM-dd')#").Filterable(filterable => filterable.Extra(true).Operators(operators => operators.ForDate(str => str.Clear()
           .IsGreaterThanOrEqualTo("Mayor o igual a")
           .IsLessThanOrEqualTo("Menor o igual a"))));
-          columns.Bound(c => c.CreatedDate).Width(90).Title("Fecha de creación").ClientTemplate("#=kendo.toString(UpdateDate,'yyyy-MM-dd')#");
+          columns.Bound(c => c.CreatedDate).Width(90).Title("Fecha de creación").ClientTemplate("#=kendo.toString(CreatedDate,'yyyy-MM-dd')#");
           columns.Bound(c => c.UpdateDate).Hidden(true).Width(90).Title("Fecha de actualización").ClientTemplate("#=kendo.toString(UpdateDate,'yyyy-MM-dd')#");
           columns.Command(command =>
           {
@@ -46,14 +46,15 @@
       .Filterable()
       .Scrollable()
       .Events(events =>
-       {
-           events.SaveChanges("onSaveChanges");
-           events.Remove("onSaveChanges");
-           events.Save("onSaveChanges");
-           events.Edit("onSaveChanges");
-       })
+      {
+          events.SaveChanges("onSaveChanges");
+          events.Remove("onSaveChanges");
+          events.Save("onSaveChanges");
+          events.Edit("onSaveChanges");
+      })
       .DataSource(dataSource => dataSource
           .Ajax()
+          .Sort(sort => sort.Add("CreatedDate").Descending())
           .Model(model =>
           {
               model.Id(p => p.Id);
@@ -67,4 +68,5 @@
           .Update(update => update.Action("Employee_Update", "Employee"))
           .Destroy(destroy => destroy.Action("Employee_Destroy", "Employee"))
       )
+       .Resizable(resize => resize.Columns(true))
 )

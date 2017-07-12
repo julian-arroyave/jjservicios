@@ -197,6 +197,10 @@ namespace JJServicios.Web.Controllers
                 {
                     fd.Member = toMap;
                 }
+                if (fd.Member.ToLower().Contains("date"))
+                {
+                    fd.Value = ((DateTime)fd.Value).ToUniversalTime();
+                }
             }
         }
 

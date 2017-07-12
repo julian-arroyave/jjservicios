@@ -1,19 +1,10 @@
 ﻿@using JJServicios.Web.Models
 @{
-    ViewBag.Title = "J & J Admin";
-    var bankAccountId = HttpContext.Current.Request["bankAccountId"];
+    ViewBag.Title = "Home Page";
 }
-
-@if(!string.IsNullOrEmpty(bankAccountId))
-{
-    var bankAccountsDictionary = (Dictionary<string, string>)ViewData["bankAccountsDiciontary"];
-
-    <h1>Resumen  @bankAccountsDictionary[bankAccountId] </h1>
-
+<h1>Resumen cuenta secundaria</h1>
 <style type="text/css">
-    td {
-        text-align: right;
-    }
+   td {text-align:right;} 
 </style>
 
 @(Html.Kendo().Grid<SummaryViewModel>()
@@ -34,17 +25,12 @@
       })
       .Scrollable()
       .Pageable()
-                .ToolBar(toolbar =>
-          {
-              toolbar.Excel().Text("Exportar a excel");
-          })
       .Filterable()
       .DataSource(dataSource => dataSource
           .Ajax()
           .Sort(sort => sort.Add("MovementDate").Descending())
-          .Read(read => read.Action("Agent_Read", "Home", new { bankAccountId }))
+          .Read(read => read.Action("Agent_Read", "Home"))
           .PageSize(20)
       )
       )
-}
 

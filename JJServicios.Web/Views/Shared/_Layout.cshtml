@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using JJServicios.Web.AuthenticationHelper
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -7,58 +8,105 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 
-	<!--This bundle was moved by the Telerik VS Extensions for compatibility reasons-->
-	@Scripts.Render("~/bundles/jquery")
-	<link href="https://kendo.cdn.telerik.com/2017.2.621/styles/kendo.common.min.css" rel="stylesheet" type="text/css" />
-	<link href="https://kendo.cdn.telerik.com/2017.2.621/styles/kendo.mobile.all.min.css" rel="stylesheet" type="text/css" />
-	<link href="https://kendo.cdn.telerik.com/2017.2.621/styles/kendo.default.min.css" rel="stylesheet" type="text/css" />
-	<link href="https://kendo.cdn.telerik.com/2017.2.621/styles/kendo.rtl.min.css" rel="stylesheet" type="text/css" />
-	<script src="https://kendo.cdn.telerik.com/2017.2.621/js/jquery.min.js"></script>
-	<script src="https://kendo.cdn.telerik.com/2017.2.621/js/jszip.min.js"></script>
-	<script src="https://kendo.cdn.telerik.com/2017.2.621/js/kendo.all.min.js"></script>
-	<script src="https://kendo.cdn.telerik.com/2017.2.621/js/kendo.aspnetmvc.min.js"></script>
-	<script src="@Url.Content("~/Scripts/kendo.modernizr.custom.js")"></script>
+    <!--This bundle was moved by the Telerik VS Extensions for compatibility reasons-->
+    @Scripts.Render("~/bundles/jquery")
+    <link href="https://kendo.cdn.telerik.com/2017.2.621/styles/kendo.common.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://kendo.cdn.telerik.com/2017.2.621/styles/kendo.mobile.all.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://kendo.cdn.telerik.com/2017.2.621/styles/kendo.default.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://kendo.cdn.telerik.com/2017.2.621/styles/kendo.rtl.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://kendo.cdn.telerik.com/2017.2.621/js/jquery.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2017.2.621/js/jszip.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2017.2.621/js/kendo.all.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2017.2.621/js/kendo.aspnetmvc.min.js"></script>
+    <script src="@Url.Content("~/Scripts/kendo.modernizr.custom.js")"></script>
+
+    <style type="text/css">
+        body {
+            margin-top: 0;
+            padding-top: 0;
+        }
+
+        .container {
+            max-width: 100%;
+        }
+    </style>
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("J&J Admin", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Salidas por servicios", "Index", "ServiceMovement")</li>
-                    <li>@Html.ActionLink("Salidas", "Index", "Expense")</li>
+
+<ul id="menu">
+    <li>@Html.ActionLink("J&J Admin", "Index", "Home", new { bankAccountId = "2" }, null)</li>
+    <li>
+        Movimientos
+        <ul>
+            <li>
+                Cuenta corporativa
+                <ul>
+                    <li>@Html.ActionLink("Resumen", "Index", "Home", new { bankAccountId = "1" }, null)</li>
+                    <li>@Html.ActionLink("Entradas", "Index", "Income", new {bankAccountId = "1"}, null)</li>
                     <li>
-                        <a href="#">Menu4</a>
+                        Salidas
                         <ul>
-                            <li><a href="#">SubMenu1</a></li>
-                            <li><a href="#">SubMenu2</a></li>
-                            <li>
-                                <a href="#">SubMenu3</a>
-                                <ul>
-                                    <li><a href="#">SubMenu11</a></li>
-                                    <li><a href="#">SubMenu22</a></li>
-                                </ul>
-                            </li>
+                            <li>@Html.ActionLink("Salidas por servicios", "Index", "ServiceMovement", new {bankAccountId = "1"}, null)</li>
+                            <li>@Html.ActionLink("Otras salidas", "Index", "Expense", new {bankAccountId = "1"}, null)</li>
                         </ul>
                     </li>
-                    @*<li>@Html.ActionLink("Entradas", "Index", "Income")</li>
-                    <li>@Html.ActionLink("Tipos de movimientos", "Index", "MovementType")</li>
-                    <li>@Html.ActionLink("Empleados", "Index", "Employee")</li>
-                    <li>@Html.ActionLink("Cargos", "Index", "EmployeePosition")</li>
-                    <li>@Html.ActionLink("Cuentas financieras", "Index", "FinancialAccount")</li>
-                    <li>@Html.ActionLink("Imputación", "Index", "WorkTimeLog")</li>*@
                 </ul>
-                @Html.Partial("_LoginPartial")
-            </div>
-        </div>
-    </div>
+            </li>
+            <li>
+                Cuenta auxiliar
+                <ul>
+                    <li>@Html.ActionLink("Resumen", "Index", "Home", new { bankAccountId = "2" }, null)</li>
+                    <li>@Html.ActionLink("Entradas", "Index", "Income", new {bankAccountId = "2"}, null)</li>
+                    <li>
+                        Salidas
+                        <ul>
+                            <li>@Html.ActionLink("Salidas por servicios", "Index", "ServiceMovement", new {bankAccountId = "2"}, null)</li>
+                            <li>@Html.ActionLink("Otras salidas", "Index", "Expense", new {bankAccountId = "2"}, null)</li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+    <li>@Html.ActionLink("Empleados", "Index", "Employee")</li>
+    <li>
+        Datos
+        <ul>
+            <li>@Html.ActionLink("Tipos de movimientos", "Index", "MovementType")</li>
+            <li>@Html.ActionLink("Cargos", "Index", "EmployeePosition")</li>
+            <li>@Html.ActionLink("Cuentas financieras", "Index", "FinancialAccount")</li>
+        </ul>
+    </li>
+    <li>@Html.ActionLink("Imputación de horas", "Index", "WorkTimeLog")</li>
+
+@if (!string.IsNullOrEmpty(AuthenticationHelper.GetToken()))
+{
+    <li>
+        @AuthenticationHelper.GetUserName()
+        <ul>
+            <li>@Html.ActionLink("Cambiar contraseña", "ChangePassword", "Manage")</li>
+        </ul>
+    </li>
+        <li>
+            @Html.ActionLink("Salir", "Logout", "Account")
+        </li>
+}
+
+</ul>
+
+
+
+<script>
+        $("#menu").kendoMenu({
+            animation: {
+                open: {
+                    effects: "zoomIn",
+                    duration: 50
+                }
+            }
+        });
+    </script>
+
     <div class="container body-content">
         @RenderBody()
         <hr />
@@ -69,67 +117,64 @@
     <script type="text/javascript">
 
         function onSaveChanges(e) {
-  
 
 
-                e.sender.one("dataBound", function () {
-                    e.sender.dataSource.read();
-                });
-
-
+            e.sender.one("dataBound", function () {
+                e.sender.dataSource.read();
+            });
 
 
         };
 
     </script>
-    
+
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
-    function movementTypesFilter(element) {
-        element.kendoAutoComplete({
-            dataSource: {
-                transport: {
-                    read: "@Url.Action("GetMovementTypes", "Ajax")"
-            }
+        function movementTypesFilter(element) {
+            element.kendoAutoComplete({
+                dataSource: {
+                    transport: {
+                        read: "@Url.Action("GetMovementTypes", "Ajax")"
+                    }
+                }
+            });
         }
-        });
-    }    
 
-    function employeesFilter(element) {
-        element.kendoAutoComplete({
-            dataSource: {
-                transport: {
-                    read: "@Url.Action("GetEmployees", "Ajax")"
-            }
+        function employeesFilter(element) {
+            element.kendoAutoComplete({
+                dataSource: {
+                    transport: {
+                        read: "@Url.Action("GetEmployees", "Ajax")"
+                    }
+                }
+            });
         }
-        });
-    }    
 
-    function employeePositionFilter(element) {
-        element.kendoAutoComplete({
-            dataSource: {
-                transport: {
-                    read: "@Url.Action("GetEmployeePositions", "Ajax")"
-            }
+        function employeePositionFilter(element) {
+            element.kendoAutoComplete({
+                dataSource: {
+                    transport: {
+                        read: "@Url.Action("GetEmployeePositions", "Ajax")"
+                    }
+                }
+            });
         }
-        });
-    }
 
-    function financialAccountFilter(element) {
-        element.kendoAutoComplete({
-            dataSource: {
-                transport: {
-                    read: "@Url.Action("GetFincancialAccounts", "Ajax")"
-            }
+        function financialAccountFilter(element) {
+            element.kendoAutoComplete({
+                dataSource: {
+                    transport: {
+                        read: "@Url.Action("GetFincancialAccounts", "Ajax")"
+                    }
+                }
+            });
         }
-        });
-    }    
 
-</script>
+    </script>
 
 </body>
 </html>

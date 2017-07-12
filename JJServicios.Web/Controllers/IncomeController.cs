@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
@@ -20,6 +21,10 @@ namespace JJServicios.Web.Controllers
         public IncomeController(IDeleteAdoRepository dbAdoRepository)
         {
             _dbAdoRepository = dbAdoRepository;
+
+            var bankAccounts = _db.BankAccount.ToList();
+            Dictionary<string, string> bankAccountsDiciontary = bankAccounts.ToDictionary(ba => ba.Id.ToString(), ba => ba.Name);
+            ViewData["bankAccountsDiciontary"] = bankAccountsDiciontary;
         }
 
         [AccessControlAttribute]
@@ -31,9 +36,9 @@ namespace JJServicios.Web.Controllers
         }
 
         [AccessControlAttribute]
-        public ActionResult Income_Read([DataSourceRequest]DataSourceRequest request)
+        public ActionResult Income_Read([DataSourceRequest]DataSourceRequest request, int bankAccountId)
         {
-            IQueryable<Income> incomes = _db.Income;
+            IQueryable<Income> incomes = _db.Income.Where(x => x.BankAccountId == bankAccountId); ;
             var result = GetIncomesDataResult(request, incomes);
             return Json(result);
         }
@@ -51,8 +56,9 @@ namespace JJServicios.Web.Controllers
                     Observations = income.Observations,
                     CreatedDate = DateTime.UtcNow,
                     UpdateDate = DateTime.UtcNow,
-                    MovementTypeId = income.MovementTypeId
-                };
+                    MovementTypeId = income.MovementTypeId,
+                    BankAccountId = Convert.ToInt16(HttpContext.Request["bankAccountId"])
+            };
 
                 _db.Income.Add(entity);
                 _db.SaveChanges();
@@ -70,7 +76,7 @@ namespace JJServicios.Web.Controllers
 
             MappAllViewFields(request);
 
-            DataSourceResult result = incomes.ToDataSourceResult(request, c => new IncomeExpenseViewModel
+            DataSourceResult result = incomes.ToDataSourceResult(request, c => c.BankAccountId != null ? new IncomeExpenseViewModel
             {
                 Amount = c.Amount,
                 Observations = c.Observations,
@@ -78,8 +84,9 @@ namespace JJServicios.Web.Controllers
                 MovementType = movementType.Where(x => x.Id == c.MovementTypeId).Select(x => x.Name).First(),
                 MovementTypeId = c.MovementTypeId,
                 CreatedDate = c.CreatedDate.ToLocalTime(),
-                UpdateDate = c.UpdateDate.ToLocalTime()
-            });
+                UpdateDate = c.UpdateDate.ToLocalTime(),
+                BankAccountId = c.BankAccountId.Value
+            } : null);
             return result;
         }
 
@@ -112,6 +119,10 @@ namespace JJServicios.Web.Controllers
                 {
                     fd.Member = toMap;
                 }
+                if (fd.Member.ToLower().Contains("date"))
+                {
+                    fd.Value = ((DateTime)fd.Value).ToUniversalTime();
+                }
             }
         }
 
@@ -129,7 +140,8 @@ namespace JJServicios.Web.Controllers
                     Observations = income.Observations,
                     CreatedDate = income.CreatedDate.ToUniversalTime(),
                     UpdateDate = DateTime.UtcNow,
-                    MovementTypeId = income.MovementTypeId
+                    MovementTypeId = income.MovementTypeId,
+                    BankAccountId = income.BankAccountId
                 };
 
                 _db.Income.Attach(entity);

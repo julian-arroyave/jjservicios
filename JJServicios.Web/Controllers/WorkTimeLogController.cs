@@ -7,15 +7,15 @@ using Kendo.Mvc.UI;
 using JJServicios.DB.Contracts;
 using JJServicios.DB.Contracts.Repositories;
 using JJServicios.Web.Models;
+using Kendo.Mvc;
 
 namespace JJServicios.Web.Controllers
 {
     public class WorkTimeLogController : Controller
     {
-        private JJServiciosEntities db = new JJServiciosEntities();
+        private readonly JJServiciosEntities _db = new JJServiciosEntities();
 
         private readonly IDeleteAdoRepository _dbAdoRepository;
-
 
         public WorkTimeLogController(IDeleteAdoRepository dbAdoRepository)
         {
@@ -31,7 +31,10 @@ namespace JJServicios.Web.Controllers
         [AccessControlAttribute]
         public ActionResult WorkTimeLog_Read([DataSourceRequest]DataSourceRequest request)
         {
-            IQueryable<WorkTimeLog> movementtype = db.WorkTimeLog;
+            IQueryable<WorkTimeLog> movementtype = _db.WorkTimeLog;
+
+            MappAllViewFields(request);
+
             DataSourceResult result = movementtype.ToDataSourceResult(request, movementType => new
             {
                 movementType.Id,
@@ -65,8 +68,8 @@ namespace JJServicios.Web.Controllers
                 EndDate =movementType.EndDate.ToUniversalTime(),
                 };
 
-                db.WorkTimeLog.Add(entity);
-                db.SaveChanges();
+                _db.WorkTimeLog.Add(entity);
+                _db.SaveChanges();
                 movementType.Id = entity.Id;
             }
 
@@ -89,9 +92,9 @@ namespace JJServicios.Web.Controllers
                     StartDate = movementType.StartDate.ToUniversalTime(),
                     EndDate = movementType.EndDate.ToUniversalTime(),
                 };
-                db.WorkTimeLog.Attach(entity);
-                db.Entry(entity).State = EntityState.Modified;
-                db.SaveChanges();
+                _db.WorkTimeLog.Attach(entity);
+                _db.Entry(entity).State = EntityState.Modified;
+                _db.SaveChanges();
             }
 
             return Json(new[] { movementType }.ToDataSourceResult(request, ModelState));
@@ -117,8 +120,45 @@ namespace JJServicios.Web.Controllers
 
         protected override void Dispose(bool disposing)
         {
-            db.Dispose();
+            _db.Dispose();
             base.Dispose(disposing);
+        }
+
+        private static void MappAllViewFields(DataSourceRequest request)
+        {
+            var rw = request.Filters.ToList();
+            foreach (var f in rw)
+            {
+                MappViewFields(f, "Agent", "Agent.Name");
+            }
+        }
+
+        private static void MappViewFields(IFilterDescriptor f, string current, string toMap)
+        {
+            var type = f.GetType();
+
+            if (type.Name != "FilterDescriptor")
+            {
+                CompositeFilterDescriptor cfd = (CompositeFilterDescriptor)f;
+
+                foreach (var item in cfd.FilterDescriptors)
+                {
+                    MappViewFields(item, current, toMap);
+                }
+            }
+            else
+            {
+                FilterDescriptor fd = (FilterDescriptor)f;
+                if (fd.Member == current)
+                {
+                    fd.Member = toMap;
+                }
+                if (fd.Member.ToLower().Contains("date"))
+                {
+                    fd.Value =   ((DateTime)fd.Value).ToUniversalTime();
+                }
+                
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
@@ -19,6 +20,9 @@ namespace JJServicios.Web.Controllers
         public ServiceMovementController(IDeleteAdoRepository dbAdoRepository)
         {
             _dbAdoRepository = dbAdoRepository;
+            var bankAccounts = _db.BankAccount.ToList();
+            Dictionary<string, string> bankAccountsDiciontary = bankAccounts.ToDictionary(ba => ba.Id.ToString(), ba => ba.Name);
+            ViewData["bankAccountsDiciontary"] = bankAccountsDiciontary;
         }
 
         [AccessControlAttribute]
@@ -33,13 +37,13 @@ namespace JJServicios.Web.Controllers
         }
 
         [AccessControlAttribute]
-        public ActionResult ServiceMovement_Read([DataSourceRequest]DataSourceRequest request)
+        public ActionResult ServiceMovement_Read([DataSourceRequest]DataSourceRequest request, int bankAccountId)
         {
-            IQueryable<ServiceMovement> servicemovement = _db.ServiceMovement;
+            IQueryable<ServiceMovement> servicemovement = _db.ServiceMovement.Where(x => x.BankAccountId == bankAccountId); 
 
             MappAllViewFields(request);
 
-            DataSourceResult result = servicemovement.ToDataSourceResult(request, serviceMovement => new ServiceMovementViewModel
+            DataSourceResult result = servicemovement.ToDataSourceResult(request, serviceMovement => serviceMovement.BankAccountId != null ? new ServiceMovementViewModel
             {
                 Id = serviceMovement.Id,
                 City = serviceMovement.City,
@@ -52,9 +56,10 @@ namespace JJServicios.Web.Controllers
                 Employee = serviceMovement.Employee.Name,
                 EmployeeId = serviceMovement.EmployeeId,
                 MovementType = serviceMovement.MovementType.Name,
-                MovementTypeId = serviceMovement.MovementTypeId
+                MovementTypeId = serviceMovement.MovementTypeId,
+                BankAccountId = serviceMovement.BankAccountId.Value
 
-            });
+            } : null);
 
             return Json(result);
         }
@@ -76,7 +81,8 @@ namespace JJServicios.Web.Controllers
                     CreatedDate = DateTime.UtcNow,
                     UpdateDate = DateTime.UtcNow,
                     MovementTypeId = serviceMovement.MovementTypeId,
-                    EmployeeId = serviceMovement.EmployeeId
+                    EmployeeId = serviceMovement.EmployeeId,
+                    BankAccountId = Convert.ToInt16(HttpContext.Request["bankAccountId"])
                 };
 
                 _db.ServiceMovement.Add(entity);
@@ -106,6 +112,7 @@ namespace JJServicios.Web.Controllers
                     MovementTypeId = serviceMovement.MovementTypeId,
                     CreatedDate = serviceMovement.CreatedDate.ToUniversalTime(),
                     UpdateDate = serviceMovement.UpdateDate,
+                    BankAccountId = serviceMovement.BankAccountId
                 };
 
                 _db.ServiceMovement.Attach(entity);
@@ -170,6 +177,10 @@ namespace JJServicios.Web.Controllers
                 if (fd.Member == current)
                 {
                     fd.Member = toMap;
+                }
+                if (fd.Member.ToLower().Contains("date"))
+                {
+                    fd.Value = ((DateTime)fd.Value).ToUniversalTime();
                 }
             }
         }

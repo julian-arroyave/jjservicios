@@ -5,7 +5,7 @@
       .Name("grid")
       .Columns(columns =>
       {
-          columns.Bound(c => c.Agent).Filterable(false); ;
+          columns.Bound(c => c.Agent);
           columns.Bound(c => c.Id).Hidden(true);
           columns.Bound(c => c.Observations).Title("Resumen de la actividad").Filterable(false);
           columns.Bound(c => c.CreatedDate).Width(170).Title("Fecha de imputación").ClientTemplate("#=kendo.toString(CreatedDate,'yyyy-MM-dd h:mm:ss tt')#").Filterable(filterable => filterable.Extra(true).Operators(operators => operators.ForDate(str => str.Clear()
@@ -16,14 +16,16 @@
           columns.Bound(c => c.WorkedHours).Filterable(false).Width(60);
           columns.Command(command =>
           {
-            //  command.Edit().Text(" ").UpdateText(" ").CancelText(" ");
+              command.Edit()
+          .Text(" ").UpdateText(" ").CancelText(" ");
           }).Width(160);
       })
       .ToolBar(toolbar => {
           toolbar.Create().Text("Nuevo");
       })
+      .Filterable()
       .Pageable()
-            .Editable(editable => editable.Mode(GridEditMode.PopUp))
+            .Editable(editable => editable.Mode(GridEditMode.InLine))
             .Events(events =>
             {
                 events.SaveChanges("onSaveChanges");
@@ -32,7 +34,6 @@
                 events.Edit("onSaveChanges");
                 events.Edit("editChange");
             })
-       .Filterable()
       .DataSource(dataSource => dataSource
           .Ajax()
           .Sort(sort => sort.Add("CreatedDate").Descending())

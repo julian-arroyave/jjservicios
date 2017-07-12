@@ -1,13 +1,14 @@
-﻿﻿using System;
-﻿using System.Data.Entity;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using JJServicios.DB.Contracts;
-﻿using JJServicios.DB.Contracts.Repositories;
-﻿using JJServicios.Web.Models;
-﻿using Kendo.Mvc;
+using JJServicios.DB.Contracts.Repositories;
+using JJServicios.Web.Models;
+using Kendo.Mvc;
 
 namespace JJServicios.Web.Controllers
 {
@@ -27,13 +28,16 @@ namespace JJServicios.Web.Controllers
         {
             IQueryable<MovementType> movementTypes = _db.MovementType;
             ViewData["MovementTypes"] = new SelectList(movementTypes, "Id", "Name");
+            var bankAccounts = _db.BankAccount.ToList();
+            Dictionary<string, string> bankAccountsDiciontary = bankAccounts.ToDictionary(ba => ba.Id.ToString(), ba => ba.Name);
+            ViewData["bankAccountsDiciontary"] = bankAccountsDiciontary;
             return View();
         }
 
         [AccessControlAttribute]
-        public ActionResult Expense_Read([DataSourceRequest]DataSourceRequest request)
+        public ActionResult Expense_Read([DataSourceRequest]DataSourceRequest request, int bankAccountId)
         {
-            IQueryable<Expense> expenses = _db.Expense;
+            IQueryable<Expense> expenses = _db.Expense.Where(x=> x.BankAccountId == bankAccountId);
             var result = GetExpensesDataResult(request, expenses);
             return Json(result);
         }
@@ -51,7 +55,8 @@ namespace JJServicios.Web.Controllers
                     Observations = expense.Observations,
                     CreatedDate = DateTime.UtcNow,
                     UpdateDate = DateTime.UtcNow,
-                    MovementTypeId = expense.MovementTypeId
+                    MovementTypeId = expense.MovementTypeId,
+                    BankAccountId = Convert.ToInt16(HttpContext.Request["bankAccountId"])
                 };
 
                 _db.Expense.Add(entity);
@@ -68,9 +73,11 @@ namespace JJServicios.Web.Controllers
         {
             IQueryable<MovementType> movementType = _db.MovementType;
 
+            
+
             MappAllViewFields(request);
 
-            DataSourceResult result = expenses.ToDataSourceResult(request, c => new IncomeExpenseViewModel
+            DataSourceResult result = expenses.ToDataSourceResult(request, c => c.BankAccountId != null ? new IncomeExpenseViewModel
             {
                 Amount = c.Amount,
                 Observations = c.Observations,
@@ -78,8 +85,9 @@ namespace JJServicios.Web.Controllers
                 MovementType = movementType.Where(x => x.Id == c.MovementTypeId).Select(x => x.Name).First(),
                 MovementTypeId = c.MovementTypeId,
                 CreatedDate = c.CreatedDate.ToLocalTime(),
-                UpdateDate = c.UpdateDate.ToLocalTime()
-            });
+                UpdateDate = c.UpdateDate.ToLocalTime(),
+                BankAccountId = c.BankAccountId.Value
+            } : null);
             return result;
         }
 
@@ -98,19 +106,23 @@ namespace JJServicios.Web.Controllers
 
             if (type.Name != "FilterDescriptor")
             {
-                CompositeFilterDescriptor cfd = (CompositeFilterDescriptor) f;
+                CompositeFilterDescriptor cfd = (CompositeFilterDescriptor)f;
 
                 foreach (var item in cfd.FilterDescriptors)
                 {
-                    MappViewFields(item,current,toMap);
+                    MappViewFields(item, current, toMap);
                 }
             }
             else
             {
-                FilterDescriptor fd = (FilterDescriptor) f;
+                FilterDescriptor fd = (FilterDescriptor)f;
                 if (fd.Member == current)
                 {
                     fd.Member = toMap;
+                }
+                if (fd.Member.ToLower().Contains("date"))
+                {
+                    fd.Value = ((DateTime)fd.Value).ToUniversalTime();
                 }
             }
         }
@@ -129,7 +141,8 @@ namespace JJServicios.Web.Controllers
                     Observations = expense.Observations,
                     CreatedDate = expense.CreatedDate.ToUniversalTime(),
                     UpdateDate = DateTime.UtcNow,
-                    MovementTypeId = expense.MovementTypeId
+                    MovementTypeId = expense.MovementTypeId,
+                    BankAccountId = expense.BankAccountId
                 };
 
                 _db.Expense.Attach(entity);
@@ -144,15 +157,8 @@ namespace JJServicios.Web.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Expense_Destroy([DataSourceRequest]DataSourceRequest request, IncomeExpenseViewModel serviceMovement)
         {
-            try
-            {
-                _dbAdoRepository.DeleteItemById(serviceMovement.Id, "Expense");
-            }
-            catch (Exception ex)
-            {
-                var exMessage = ex.Message;
-            }
 
+            _dbAdoRepository.DeleteItemById(serviceMovement.Id, "Expense");
 
             return Json(new[] { serviceMovement }.ToDataSourceResult(request, ModelState));
         }

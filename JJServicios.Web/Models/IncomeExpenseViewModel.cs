@@ -17,5 +17,6 @@ namespace JJServicios.Web.Models
         public long MovementTypeId { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdateDate { get; set; }
+        public long BankAccountId { get; set; }
     }
 }

@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
 using System.Linq;
-using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
@@ -37,8 +33,8 @@ namespace JJServicios.Web.Controllers
             IQueryable<FinancialAccount> financialaccount = db.FinancialAccount;
             DataSourceResult result = financialaccount.ToDataSourceResult(request, financialAccount => new
             {
-                Id = financialAccount.Id,
-                Name = financialAccount.Name,
+                financialAccount.Id,
+                financialAccount.Name,
                 CreatedDate = financialAccount.CreatedDate.ToLocalTime(),
                 UpdateDate = financialAccount.UpdateDate.ToLocalTime(),
             });
@@ -94,16 +90,7 @@ namespace JJServicios.Web.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult FinancialAccount_Destroy([DataSourceRequest]DataSourceRequest request, FinancialAccount serviceMovement)
         {
-            try
-            {
-                _dbAdoRepository.DeleteItemById(serviceMovement.Id, "FinancialAccount");
-            }
-            catch (Exception ex)
-            {
-                var exMessage = ex.Message;
-            }
-
-
+            _dbAdoRepository.DeleteItemById(serviceMovement.Id, "FinancialAccount");
             return Json(new[] { serviceMovement }.ToDataSourceResult(request, ModelState));
         }
 

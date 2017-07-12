@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="JJServiciosModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="JJServiciosModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Agent">
           <Key>
             <PropertyRef Name="Id" />
@@ -15,6 +15,14 @@
           <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="UpdateDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BankAccount">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Employee">
           <Key>
@@ -61,6 +69,7 @@
           <Property Name="AgentId" Type="bigint" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="UpdateDate" Type="datetime" Nullable="false" />
+          <Property Name="BankAccountId" Type="bigint" />
         </EntityType>
         <EntityType Name="FinancialAccount">
           <Key>
@@ -83,6 +92,7 @@
           <Property Name="AgentId" Type="bigint" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="UpdateDate" Type="datetime" Nullable="false" />
+          <Property Name="BankAccountId" Type="bigint" />
         </EntityType>
         <EntityType Name="MovementType">
           <Key>
@@ -123,6 +133,7 @@
           <Property Name="AgentId" Type="bigint" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="UpdateDate" Type="datetime" Nullable="false" />
+          <Property Name="BankAccountId" Type="bigint" />
         </EntityType>
         <EntityType Name="WorkTimeLog">
           <Key>
@@ -196,6 +207,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Expense_BankAccount">
+          <End Role="BankAccount" Type="Self.BankAccount" Multiplicity="0..1" />
+          <End Role="Expense" Type="Self.Expense" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BankAccount">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Expense">
+              <PropertyRef Name="BankAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Expense_MovementType">
           <End Role="MovementType" Type="Self.MovementType" Multiplicity="1" />
           <End Role="Expense" Type="Self.Expense" Multiplicity="*" />
@@ -229,6 +252,18 @@
             </Principal>
             <Dependent Role="Income">
               <PropertyRef Name="AgentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Income_BankAccount">
+          <End Role="BankAccount" Type="Self.BankAccount" Multiplicity="0..1" />
+          <End Role="Income" Type="Self.Income" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BankAccount">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Income">
+              <PropertyRef Name="BankAccountId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -292,6 +327,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ServiceMovement_BankAccount">
+          <End Role="BankAccount" Type="Self.BankAccount" Multiplicity="0..1" />
+          <End Role="ServiceMovement" Type="Self.ServiceMovement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BankAccount">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ServiceMovement">
+              <PropertyRef Name="BankAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ServiceMovement_Employee">
           <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
           <End Role="ServiceMovement" Type="Self.ServiceMovement" Multiplicity="*" />
@@ -330,6 +377,7 @@
         </Association>
         <EntityContainer Name="JJServiciosModelStoreContainer">
           <EntitySet Name="Agent" EntityType="Self.Agent" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BankAccount" EntityType="Self.BankAccount" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="EmployeePosition" EntityType="Self.EmployeePosition" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Expense" EntityType="Self.Expense" Schema="dbo" store:Type="Tables" />
@@ -359,6 +407,10 @@
             <End Role="Agent" EntitySet="Agent" />
             <End Role="Expense" EntitySet="Expense" />
           </AssociationSet>
+          <AssociationSet Name="FK_Expense_BankAccount" Association="Self.FK_Expense_BankAccount">
+            <End Role="BankAccount" EntitySet="BankAccount" />
+            <End Role="Expense" EntitySet="Expense" />
+          </AssociationSet>
           <AssociationSet Name="FK_Expense_MovementType" Association="Self.FK_Expense_MovementType">
             <End Role="MovementType" EntitySet="MovementType" />
             <End Role="Expense" EntitySet="Expense" />
@@ -369,6 +421,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_Income_Agent" Association="Self.FK_Income_Agent">
             <End Role="Agent" EntitySet="Agent" />
+            <End Role="Income" EntitySet="Income" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Income_BankAccount" Association="Self.FK_Income_BankAccount">
+            <End Role="BankAccount" EntitySet="BankAccount" />
             <End Role="Income" EntitySet="Income" />
           </AssociationSet>
           <AssociationSet Name="FK_Income_MovementType" Association="Self.FK_Income_MovementType">
@@ -391,6 +447,10 @@
             <End Role="Agent" EntitySet="Agent" />
             <End Role="ServiceMovement" EntitySet="ServiceMovement" />
           </AssociationSet>
+          <AssociationSet Name="FK_ServiceMovement_BankAccount" Association="Self.FK_ServiceMovement_BankAccount">
+            <End Role="BankAccount" EntitySet="BankAccount" />
+            <End Role="ServiceMovement" EntitySet="ServiceMovement" />
+          </AssociationSet>
           <AssociationSet Name="FK_ServiceMovement_Employee" Association="Self.FK_ServiceMovement_Employee">
             <End Role="Employee" EntitySet="Employee" />
             <End Role="ServiceMovement" EntitySet="ServiceMovement" />
@@ -404,7 +464,8 @@
             <End Role="WorkTimeLog" EntitySet="WorkTimeLog" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="JJServiciosModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -426,7 +487,18 @@
           <NavigationProperty Name="MovementType" Relationship="Self.FK_MovementType_Agent" FromRole="Agent" ToRole="MovementType" />
           <NavigationProperty Name="PaymentEmployee" Relationship="Self.FK_PaymentEmployee_Agent" FromRole="Agent" ToRole="PaymentEmployee" />
           <NavigationProperty Name="ServiceMovement" Relationship="Self.FK_ServiceMovement_Agent" FromRole="Agent" ToRole="ServiceMovement" />
-          <NavigationProperty Name="WorkTimeLog" Relationship="JJServiciosModel.FK_WorkTimeLog_Agent" FromRole="Agent" ToRole="WorkTimeLog" />
+          <NavigationProperty Name="WorkTimeLog" Relationship="Self.FK_WorkTimeLog_Agent" FromRole="Agent" ToRole="WorkTimeLog" />
+        </EntityType>
+        <EntityType Name="BankAccount">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Expense" Relationship="Self.FK_Expense_BankAccount" FromRole="BankAccount" ToRole="Expense" />
+          <NavigationProperty Name="Income" Relationship="Self.FK_Income_BankAccount" FromRole="BankAccount" ToRole="Income" />
+          <NavigationProperty Name="ServiceMovement" Relationship="Self.FK_ServiceMovement_BankAccount" FromRole="BankAccount" ToRole="ServiceMovement" />
         </EntityType>
         <EntityType Name="Employee">
           <Key>
@@ -480,7 +552,9 @@
           <Property Name="AgentId" Type="Int64" Nullable="false" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="UpdateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="BankAccountId" Type="Int64" />
           <NavigationProperty Name="Agent" Relationship="Self.FK_Expense_Agent" FromRole="Expense" ToRole="Agent" />
+          <NavigationProperty Name="BankAccount" Relationship="Self.FK_Expense_BankAccount" FromRole="Expense" ToRole="BankAccount" />
           <NavigationProperty Name="MovementType" Relationship="Self.FK_Expense_MovementType" FromRole="Expense" ToRole="MovementType" />
         </EntityType>
         <EntityType Name="FinancialAccount">
@@ -506,7 +580,9 @@
           <Property Name="AgentId" Type="Int64" Nullable="false" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="UpdateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="BankAccountId" Type="Int64" />
           <NavigationProperty Name="Agent" Relationship="Self.FK_Income_Agent" FromRole="Income" ToRole="Agent" />
+          <NavigationProperty Name="BankAccount" Relationship="Self.FK_Income_BankAccount" FromRole="Income" ToRole="BankAccount" />
           <NavigationProperty Name="MovementType" Relationship="Self.FK_Income_MovementType" FromRole="Income" ToRole="MovementType" />
         </EntityType>
         <EntityType Name="MovementType">
@@ -554,9 +630,24 @@
           <Property Name="AgentId" Type="Int64" Nullable="false" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="UpdateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="BankAccountId" Type="Int64" />
           <NavigationProperty Name="Agent" Relationship="Self.FK_ServiceMovement_Agent" FromRole="ServiceMovement" ToRole="Agent" />
+          <NavigationProperty Name="BankAccount" Relationship="Self.FK_ServiceMovement_BankAccount" FromRole="ServiceMovement" ToRole="BankAccount" />
           <NavigationProperty Name="Employee" Relationship="Self.FK_ServiceMovement_Employee" FromRole="ServiceMovement" ToRole="Employee" />
           <NavigationProperty Name="MovementType" Relationship="Self.FK_ServiceMovement_MovementType" FromRole="ServiceMovement" ToRole="MovementType" />
+        </EntityType>
+        <EntityType Name="WorkTimeLog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AgentId" Type="Int64" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Observations" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Agent" Relationship="Self.FK_WorkTimeLog_Agent" FromRole="WorkTimeLog" ToRole="Agent" />
         </EntityType>
         <Association Name="FK_Employee_Agent">
           <End Role="Agent" Type="Self.Agent" Multiplicity="1" />
@@ -654,6 +745,54 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_WorkTimeLog_Agent">
+          <End Role="Agent" Type="Self.Agent" Multiplicity="1" />
+          <End Role="WorkTimeLog" Type="Self.WorkTimeLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agent">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkTimeLog">
+              <PropertyRef Name="AgentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Expense_BankAccount">
+          <End Role="BankAccount" Type="Self.BankAccount" Multiplicity="0..1" />
+          <End Role="Expense" Type="Self.Expense" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BankAccount">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Expense">
+              <PropertyRef Name="BankAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Income_BankAccount">
+          <End Role="BankAccount" Type="Self.BankAccount" Multiplicity="0..1" />
+          <End Role="Income" Type="Self.Income" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BankAccount">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Income">
+              <PropertyRef Name="BankAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ServiceMovement_BankAccount">
+          <End Role="BankAccount" Type="Self.BankAccount" Multiplicity="0..1" />
+          <End Role="ServiceMovement" Type="Self.ServiceMovement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BankAccount">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ServiceMovement">
+              <PropertyRef Name="BankAccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Employee_EmployeePosition">
           <End Role="EmployeePosition" Type="Self.EmployeePosition" Multiplicity="1" />
           <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
@@ -738,8 +877,9 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="JJServiciosEntities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="JJServiciosEntities1" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Agent" EntityType="Self.Agent" />
+          <EntitySet Name="BankAccount" EntityType="Self.BankAccount" />
           <EntitySet Name="Employee" EntityType="Self.Employee" />
           <EntitySet Name="EmployeePosition" EntityType="Self.EmployeePosition" />
           <EntitySet Name="Expense" EntityType="Self.Expense" />
@@ -748,6 +888,7 @@
           <EntitySet Name="MovementType" EntityType="Self.MovementType" />
           <EntitySet Name="PaymentEmployee" EntityType="Self.PaymentEmployee" />
           <EntitySet Name="ServiceMovement" EntityType="Self.ServiceMovement" />
+          <EntitySet Name="WorkTimeLog" EntityType="Self.WorkTimeLog" />
           <AssociationSet Name="FK_Employee_Agent" Association="Self.FK_Employee_Agent">
             <End Role="Agent" EntitySet="Agent" />
             <End Role="Employee" EntitySet="Employee" />
@@ -780,6 +921,22 @@
             <End Role="Agent" EntitySet="Agent" />
             <End Role="ServiceMovement" EntitySet="ServiceMovement" />
           </AssociationSet>
+          <AssociationSet Name="FK_WorkTimeLog_Agent" Association="Self.FK_WorkTimeLog_Agent">
+            <End Role="Agent" EntitySet="Agent" />
+            <End Role="WorkTimeLog" EntitySet="WorkTimeLog" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Expense_BankAccount" Association="Self.FK_Expense_BankAccount">
+            <End Role="BankAccount" EntitySet="BankAccount" />
+            <End Role="Expense" EntitySet="Expense" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Income_BankAccount" Association="Self.FK_Income_BankAccount">
+            <End Role="BankAccount" EntitySet="BankAccount" />
+            <End Role="Income" EntitySet="Income" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ServiceMovement_BankAccount" Association="Self.FK_ServiceMovement_BankAccount">
+            <End Role="BankAccount" EntitySet="BankAccount" />
+            <End Role="ServiceMovement" EntitySet="ServiceMovement" />
+          </AssociationSet>
           <AssociationSet Name="FK_Employee_EmployeePosition" Association="Self.FK_Employee_EmployeePosition">
             <End Role="EmployeePosition" EntitySet="EmployeePosition" />
             <End Role="Employee" EntitySet="Employee" />
@@ -808,43 +965,13 @@
             <End Role="MovementType" EntitySet="MovementType" />
             <End Role="ServiceMovement" EntitySet="ServiceMovement" />
           </AssociationSet>
-          <EntitySet Name="WorkTimeLog" EntityType="JJServiciosModel.WorkTimeLog" />
-          <AssociationSet Name="FK_WorkTimeLog_Agent" Association="JJServiciosModel.FK_WorkTimeLog_Agent">
-            <End Role="Agent" EntitySet="Agent" />
-            <End Role="WorkTimeLog" EntitySet="WorkTimeLog" />
-          </AssociationSet>
         </EntityContainer>
-        <EntityType Name="WorkTimeLog">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="AgentId" Type="Int64" Nullable="false" />
-          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Observations" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="UpdateDate" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Agent" Relationship="JJServiciosModel.FK_WorkTimeLog_Agent" FromRole="WorkTimeLog" ToRole="Agent" />
-        </EntityType>
-        <Association Name="FK_WorkTimeLog_Agent">
-          <End Type="JJServiciosModel.Agent" Role="Agent" Multiplicity="1" />
-          <End Type="JJServiciosModel.WorkTimeLog" Role="WorkTimeLog" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Agent">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="WorkTimeLog">
-              <PropertyRef Name="AgentId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="JJServiciosModelStoreContainer" CdmEntityContainer="JJServiciosEntities">
+        <EntityContainerMapping StorageEntityContainer="JJServiciosModelStoreContainer" CdmEntityContainer="JJServiciosEntities1">
           <EntitySetMapping Name="Agent">
             <EntityTypeMapping TypeName="JJServiciosModel.Agent">
               <MappingFragment StoreEntitySet="Agent">
@@ -854,6 +981,15 @@
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BankAccount">
+            <EntityTypeMapping TypeName="JJServiciosModel.BankAccount">
+              <MappingFragment StoreEntitySet="BankAccount">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -903,6 +1039,7 @@
                 <ScalarProperty Name="AgentId" ColumnName="AgentId" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="BankAccountId" ColumnName="BankAccountId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -927,6 +1064,7 @@
                 <ScalarProperty Name="AgentId" ColumnName="AgentId" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="BankAccountId" ColumnName="BankAccountId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -970,19 +1108,20 @@
                 <ScalarProperty Name="AgentId" ColumnName="AgentId" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="BankAccountId" ColumnName="BankAccountId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="WorkTimeLog">
             <EntityTypeMapping TypeName="JJServiciosModel.WorkTimeLog">
               <MappingFragment StoreEntitySet="WorkTimeLog">
-                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="Observations" ColumnName="Observations" />
-                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
-                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
-                <ScalarProperty Name="AgentId" ColumnName="AgentId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="AgentId" ColumnName="AgentId" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="Observations" ColumnName="Observations" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

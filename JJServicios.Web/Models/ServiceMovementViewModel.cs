@@ -31,6 +31,7 @@ namespace JJServicios.Web.Models
         public string Employee { get; set; }
         [Required(ErrorMessage = "Requerido")]
         public long EmployeeId { get; set; }
+        public long BankAccountId { get; set; }
 
         public DateTime CreatedDate { get; set; }
         public DateTime UpdateDate { get; set; }

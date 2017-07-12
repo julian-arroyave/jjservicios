@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>JJServicios.DB.Contracts</RootNamespace>
     <AssemblyName>JJServicios.DB.Contracts</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -52,53 +53,56 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Agent.cs">
-      <DependentUpon>JjServiciosEntity.tt</DependentUpon>
+      <DependentUpon>JJServiciosEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BankAccount.cs">
+      <DependentUpon>JJServiciosEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Employee.cs">
-      <DependentUpon>JjServiciosEntity.tt</DependentUpon>
+      <DependentUpon>JJServiciosEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="EmployeePosition.cs">
-      <DependentUpon>JjServiciosEntity.tt</DependentUpon>
+      <DependentUpon>JJServiciosEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Expense.cs">
-      <DependentUpon>JjServiciosEntity.tt</DependentUpon>
+      <DependentUpon>JJServiciosEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="FinancialAccount.cs">
-      <DependentUpon>JjServiciosEntity.tt</DependentUpon>
+      <DependentUpon>JJServiciosEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Income.cs">
-      <DependentUpon>JjServiciosEntity.tt</DependentUpon>
+      <DependentUpon>JJServiciosEntities.tt</DependentUpon>
     </Compile>
-    <Compile Include="JjServiciosEntity.Context.cs">
+    <Compile Include="JJServiciosEntities.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>JjServiciosEntity.Context.tt</DependentUpon>
+      <DependentUpon>JJServiciosEntities.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="JjServiciosEntity.cs">
+    <Compile Include="JJServiciosEntities.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>JjServiciosEntity.tt</DependentUpon>
+      <DependentUpon>JJServiciosEntities.tt</DependentUpon>
     </Compile>
-    <Compile Include="JjServiciosEntity.Designer.cs">
+    <Compile Include="JJServiciosEntities.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>JjServiciosEntity.edmx</DependentUpon>
+      <DependentUpon>JJServiciosEntities.edmx</DependentUpon>
     </Compile>
     <Compile Include="MovementType.cs">
-      <DependentUpon>JjServiciosEntity.tt</DependentUpon>
+      <DependentUpon>JJServiciosEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="PaymentEmployee.cs">
-      <DependentUpon>JjServiciosEntity.tt</DependentUpon>
+      <DependentUpon>JJServiciosEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\DeleteAdoRepository.cs" />
     <Compile Include="Repositories\GenericRepository.cs" />
     <Compile Include="IUnitOfWork.cs" />
     <Compile Include="ServiceMovement.cs">
-      <DependentUpon>JjServiciosEntity.tt</DependentUpon>
+      <DependentUpon>JJServiciosEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="WorkTimeLog.cs">
-      <DependentUpon>JjServiciosEntity.tt</DependentUpon>
+      <DependentUpon>JJServiciosEntities.tt</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -109,12 +113,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />
-    <EntityDeploy Include="JjServiciosEntity.edmx">
+    <EntityDeploy Include="JJServiciosEntities.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>JjServiciosEntity.Designer.cs</LastGenOutput>
+      <LastGenOutput>JJServiciosEntities.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <None Include="JjServiciosEntity.edmx.diagram">
-      <DependentUpon>JjServiciosEntity.edmx</DependentUpon>
+    <None Include="JJServiciosEntities.edmx.diagram">
+      <DependentUpon>JJServiciosEntities.edmx</DependentUpon>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
@@ -122,15 +126,15 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="JjServiciosEntity.Context.tt">
+    <Content Include="JJServiciosEntities.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>JjServiciosEntity.edmx</DependentUpon>
-      <LastGenOutput>JjServiciosEntity.Context.cs</LastGenOutput>
+      <DependentUpon>JJServiciosEntities.edmx</DependentUpon>
+      <LastGenOutput>JJServiciosEntities.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="JjServiciosEntity.tt">
+    <Content Include="JJServiciosEntities.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>JjServiciosEntity.edmx</DependentUpon>
-      <LastGenOutput>JjServiciosEntity.cs</LastGenOutput>
+      <DependentUpon>JJServiciosEntities.edmx</DependentUpon>
+      <LastGenOutput>JJServiciosEntities.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

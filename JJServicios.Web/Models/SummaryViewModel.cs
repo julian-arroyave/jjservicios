@@ -10,6 +10,7 @@ namespace JJServicios.Web.Models
         public decimal AmountOut { get; set; }
         public decimal AmountIn { get; set; }
         public string AgentName  {get; set;}
+        public int BankAccountId { get; set; }
 
         public string AmountOutString
         {

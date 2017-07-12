@@ -11,16 +11,15 @@ using Microsoft.AspNet.Identity;
 
 namespace JJServicios.Web.Controllers
 {
-    public class HomeController : Controller
+    public class SummaryController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly JJServiciosEntities _db = new JJServiciosEntities();
         private static DateTime? _upperLimitDate;
         private static DateTime? _lowerLimitDate;
 
-        public HomeController(IUnitOfWork unitOfWork)
+        public SummaryController()
         {
-            _unitOfWork = unitOfWork;
+
             var bankAccounts = _db.BankAccount.ToList();
             Dictionary<string, string> bankAccountsDiciontary = bankAccounts.ToDictionary(ba => ba.Id.ToString(), ba => ba.Name);
             ViewData["bankAccountsDiciontary"] = bankAccountsDiciontary;
@@ -29,7 +28,6 @@ namespace JJServicios.Web.Controllers
         [AccessControlAttribute]
         public ActionResult Index()
         {
-            var user = User.Identity.GetUserName();
             return View();
         }
 

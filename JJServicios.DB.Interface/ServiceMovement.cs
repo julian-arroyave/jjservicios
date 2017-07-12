@@ -25,8 +25,10 @@ namespace JJServicios.DB.Contracts
         public long AgentId { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public System.DateTime UpdateDate { get; set; }
+        public Nullable<long> BankAccountId { get; set; }
     
         public virtual Agent Agent { get; set; }
+        public virtual BankAccount BankAccount { get; set; }
         public virtual Employee Employee { get; set; }
         public virtual MovementType MovementType { get; set; }
     }
