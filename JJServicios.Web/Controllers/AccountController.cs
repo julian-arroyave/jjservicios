@@ -486,7 +486,7 @@ namespace JJServicios.Web.Controllers
                         System.Web.Caching.Cache.NoSlidingExpiration);                    
                 }
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Summary");
         }
 
 

@@ -1,50 +1,560 @@
-﻿@using JJServicios.Web.Models
-@{
-    ViewBag.Title = "J & J Admin";
-    var bankAccountId = HttpContext.Current.Request["bankAccountId"];
+﻿@{
+    Layout = null;
 }
 
-@if(!string.IsNullOrEmpty(bankAccountId))
-{
-    var bankAccountsDictionary = (Dictionary<string, string>)ViewData["bankAccountsDiciontary"];
 
-    <h1>Resumen  @bankAccountsDictionary[bankAccountId] </h1>
+<!DOCTYPE html>
+<html id="ls-global" lang="es">
 
-<style type="text/css">
-    td {
-        text-align: right;
-    }
-</style>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link rel="icon" type="image/png" href="http://www.jjservicios.com.co/index/images/jjfavico.png" />
+    <!-- Basic Meta Tags -->
+    <meta charset="utf-8">
+    <title>J y J Servicios electrónicos e informáticos</title>
+    <meta name="description" content="J yJ Servicios electrónicos e informáticos">
+    <meta name="keywords" content="cctv network services redes stf">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-@(Html.Kendo().Grid<SummaryViewModel>()
-      .Name("grid")
-            .HtmlAttributes(new { style = "height:550px;" })
-      .Columns(columns =>
-      {
-          columns.Bound(c => c.BankAccountId).Hidden(true);
-          columns.Bound(c => c.AgentName).Title("Agente").Width(80).Filterable(false).ClientTemplate("<div style='text-align:center';>#=AgentName#</div>");
-          columns.Bound(c => c.MovementDate).Title("Fecha de creación").ClientTemplate("#=kendo.toString(MovementDate,'yyyy-MM-dd h:mm:ss tt')#").Filterable(filterable => filterable.Extra(true).Operators(operators => operators.ForDate(str => str.Clear()
-.IsGreaterThanOrEqualTo("Mayor o igual a")
-.IsLessThanOrEqualTo("Menor o igual a"))));
-          columns.Bound(c => c.MovementType).Title("Tipo de Movimiento").Filterable(false);
-          columns.Bound(c => c.AmountInString).Title("Cantidad").Filterable(false).ClientTemplate("<div style='color:blue';>#=AmountInString#</div>");
-          columns.Bound(c => c.AmountOutString).Title("Cantidad").Filterable(false).ClientTemplate("<div style='color:red';>#=AmountOutString#</div>");
-          columns.Bound(c => c.Observations).Title("Observaciones").Filterable(false);
-          columns.Bound(c => c.TotalString).Title("Total a la fecha").Filterable(false);
-      })
-      .Scrollable()
-      .Pageable()
-                .ToolBar(toolbar =>
-          {
-              toolbar.Excel().Text("Exportar a excel");
-          })
-      .Filterable()
-      .DataSource(dataSource => dataSource
-          .Ajax()
-          .Sort(sort => sort.Add("MovementDate").Descending())
-          .Read(read => read.Action("Agent_Read", "Home", new { bankAccountId }))
-          .PageSize(20)
-      )
-      )
-}
+    <meta property="og:title" content="J y J Servicios electrónicos e informáticos" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="http://www.jjservicios.com.co/" />
+    <meta property="og:image" content="http://www.jjservicios.com.co/logo.png" />
+    <meta property="og:description" content="Somos una empresa dedicada a la instalación, mantenimiento, soporte y configuración de equipos de monitoreo y seguridad electrónica." />
+    <!-- Twitter Card data -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="J&J Servicios Electrónicos e Informáticos">
+    <meta name="twitter:description" content="Somos una empresa dedicada a la instalación, mantenimiento, soporte y configuración de equipos de monitoreo y seguridad electrónica.">
+    <meta name="twitter:image" content="http://jjservicios.com.co/index/images/logoblack.png">
 
+
+    <!--[if (gte IE 9)|!(IE)]>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <![endif]-->
+    <script type="text/javascript" src="~/Content/index/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="~/Content/index/jjscript.js"></script>
+    <!-- Bootstrap -->
+    <link href="~/Content/index/bootstrap.css" rel="stylesheet">
+
+
+    <!-- Styles -->
+    <link href="~/Content/index/styles.css" rel="stylesheet" id="color-style">
+    <!-- Flexslider CSS -->
+    <link href="~/Content/index/flexslider.css" rel="stylesheet">
+    <!-- Magnific Popup -->
+    <link href="~/Content/index/magnific-popup.css" rel="stylesheet">
+    <!-- Font Awesome Style -->
+    <link href="~/Content/index/font-awesome.css" rel="stylesheet">
+    <!-- Entypo Icons -->
+    <link href="~/Content/index/entypo.css" rel="stylesheet">
+    <!-- LayerSlider stylesheet -->
+    <!-- Web Fonts -->
+    <link href="~/Content/index/css.css" rel="stylesheet" type="text/css">
+
+    <link href="~/Content/index/typography.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/index/layout.css" rel="stylesheet" type="text/css">
+
+
+    <link rel="stylesheet" href="~/Content/index/base.css" type="text/css">
+</head>
+<body>
+
+
+    <header class="fixed">
+        <div class="row  hide_mobile space80"></div>
+
+        <!-- Nav -->
+        <div id="undefined-sticky-wrapper">
+            <nav style="position: fixed; top: 0px;" class="navbar fixed" role="navigation">
+                <div class="navbar-inner">
+                    <div class="container">
+                        <!-- Logo -->
+                        <a class="back-to-top inlineblock gohome" style="float: left" title="Home">
+                            <span class="hide_mobile text-logo"><img alt="JyJ Servicios" src="http://jjservicios.com.co/index/images/logoblack.png"></span>
+                            <span class="text-logo hide_tablet hide_desktop">J&J</span>
+                        </a>
+
+                        <!-- Menu -->
+                        <ul class="inlineblock nav">
+                            <li class="active"><a value="#home" title="Home">Inicio</a></li>
+                            <li class=""><a value="#about" title="About">¿Quiénes somos?</a></li>
+                            <li class=""><a value="#clients" title="Portfolio">Clientes</a></li>
+                            <li class=""><a value="#coverage" title="Components">Cobertura</a></li>
+                            <li class=""><a value="#login" title="Contact">Correo</a></li>
+                            <li class=""><a value="#enter" title="Contact">Ingresar</a></li>
+                            <li class=""><a value="#contact" title="Contact">Contacto</a></li>
+                            <li class="">@Html.ActionLink("J&J Admin","Index", "Summary")</li>
+                        </ul>
+                        <select class="select-menu">
+                            <option value="#home">Inicio</option>
+                            <option value="#about">¿Quiénes somos?</option>
+                            <option value="#clients">Clientes</option>
+                            <option value="#coverage">Cobertura</option>
+                            <option value="#login">Correo</option>
+                            <option value="#enter">Ingresar</option>
+                            <option value="#contact">Contacto</option>
+                            <li class="">@Html.ActionLink("J&J Admin", "Index", "Summary")</li>
+                        </select>
+                        <!-- select menu for small screens -->
+                        <!-- Menu End -->
+
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <!-- Nav End -->
+    </header>
+    <div class="row" id="home"></div>
+    <div class="container">
+        <div class="row hide_desktop  hide_tablet space80"></div>
+        <div class="row hide_desktop  hide_tablet space80"></div>
+        <div class="row hide_mobile  hide_tablet space50"></div>
+
+        <div class="row space30"></div>
+        <div class="row  space80"></div>
+        <div class="row">
+            <div value="#about" class="goto col-md-4">
+                <div class="space30"></div>
+                <!-- Service -->
+                <div class="service">
+                    <img src="http://www.jjservicios.com.co/index/images/cctv.jpg" alt="">
+                    <div class="service-content">
+                        <h4>CCTV</h4>
+                        <p>
+                            Instalación, reparación y mantenimiento de todo lo referente a circuitos cerrados de tv .
+                        </p>
+                    </div>
+                </div>
+                <!-- Service End -->
+            </div>
+            <div value="#about" class="goto col-md-4">
+                <div class="space30"></div>
+                <!-- Service -->
+                <div class="service">
+                    <img src="http://www.jjservicios.com.co/index/images/network.jpg" alt="">
+                    <div class="service-content">
+                        <h4>Redes</h4>
+                        <p>
+                            Instalación, configuración y reconfiguraciones de routers, switches y demás equipos de red.
+                        </p>
+                    </div>
+                </div>
+                <!-- Service End -->
+            </div>
+            <div value="#coverage" class="goto col-md-4">
+                <div class="space30"></div>
+                <!-- Service -->
+                <div class="service">
+                    <img src="http://www.jjservicios.com.co/index/images/cities/cities.jpg" alt="">
+                    <div class="service-content">
+                        <h4>Cobertura</h4>
+                        <p>
+                            Tenemos los mejores técnicos disponibles en las principales ciudades del país.
+                        </p>
+                    </div>
+                </div>
+                <!-- Service End -->
+            </div>
+        </div>
+
+        <div class="row scheme-container">
+            <div class="scheme-box-1"></div>
+            <div class="scheme-box-2"></div>
+            <div class="scheme-box-3"></div>
+        </div>
+
+
+
+    </div>
+
+    <div class="container content" id="about">
+        <div class="row  space80"></div>
+        <div class="row">
+            <div class="col-md-12">
+                <h2>¿Quiénes somos?</h2>
+                <h3>Eficacia y prontitud para atender sus solicitudes</h3>
+            </div>
+        </div>
+        <div class="row space40"></div>
+        <div class="row  space80 about">
+            <div class="col-md-6 text-content">
+                <h4>J&J Servicios Electrónicos e Informáticos</h4>
+                <br />
+                <p>
+                    Somos una empresa dedicada a la instalación, mantenimiento, soporte y configuración de equipos de monitoreo y seguridad electrónica.
+                </p>
+                <p>
+                    Realizamos instalaciones y configuraciones de redes, routers, switches, cajas registradoras, teléfonos Ips, integración de datafónos entre otras necesidades que su negocio requiere.
+                </p>
+                <div value="#contact" class="link goto">¡Contáctenos!</div>
+                <br />
+            </div>
+
+            <div class="col-md-6">
+                <img src="http://www.jjservicios.com.co/index/images/profesionales.png" alt="">
+                <br />
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="container content" id="clients">
+        <div class="row  space80"></div>
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Clientes</h2>
+                <h3>¡Más de un año con nosotros!</h3>
+            </div>
+        </div>
+
+        <div class="row space40"></div>
+
+        <div class="row">
+            <div class="col-md-12">
+
+                <!-- Nav Tabs -->
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a href="http://www.studiof.com.co/" data-toggle="tab">
+                            <div class="scheme-item">
+                                <i class="fa fa-bolt">
+                                    <img style="-webkit-user-select: none;" src="http://www.jjservicios.com.co/index/images/stfgroup.jpg">
+                                </i>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="http://ela.com.co/" data-toggle="tab">
+                            <div class="scheme-item">
+                                <i class="fa fa-fire">
+                                    <img src="http://www.jjservicios.com.co/index/images/ela.jpg">
+                                </i>
+                            </div>
+                        </a>
+                    </li>
+
+                </ul>
+                <!-- Nav Tabs End -->
+                <!-- Tab Panes -->
+                <div class="tab-content">
+
+                    <div class="tab-pane active" id="service-1">
+                        <h4>Studio F, Ela</h4>
+                        <br />
+                        <p>
+                            Excelente cobertura, respuesta rápida y eficaz, profesionalismo entre otras, son algunas de las cualidades que nuestros clientes han visto en nuestro trabajo consiguiendo de ellos su fidelización
+                        </p>
+                    </div>
+
+                    <div value="#contact" class="link goto">¡Contáctenos!</div>
+                </div>
+                <!-- Tab Panes End -->
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="container content" id="coverage">
+        <div class="row  space80"></div>
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Cobertura</h2>
+                <h3>Llegamos a donde usted lo requiera</h3>
+            </div>
+        </div>
+
+        <div class="row space40"></div>
+
+        <div class="row about">
+            <div class="col-md-6">
+                <img src="http://www.jjservicios.com.co/index/images/cities/cities.jpg" alt="cobertura">
+                <div class="space20"></div>
+            </div>
+            <div class="col-md-6 text-content">
+                <h4>Estamos en las principales ciudades del país</h4>
+                <br />
+                <p>
+                    Bogotá, Cali, Medellìn, Valledupar, Bucaramanga, Manizales, Caquetá son las ciudades en las que disponemos técnicos para responder rápidamente a los requerimientos de nuestros clientes.
+                </p>
+                <p>
+                    ¡Próximamente en más lugares!
+                </p>
+                <p>
+                    Para las demás ciudades del país tenemos un tiempo de respuesta no mayor a 10 días después de hecha su petición.
+                </p>
+                <div value="#contact" class="link goto">¡Contáctenos!</div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+    <div class="full">
+        <div id="enter">
+            <div class="container content">
+                <div class="row   space80"></div>
+                <div class="login-container">
+                    <div class="banner_image">
+
+                        <!-- BANNER -->
+                        <section class="banner black_bg no_padding_bottom">
+                            <div class="container">
+
+                                <!-- ROW -->
+                                <div class="row first last">
+
+                                    <div class="span12 cols centered text_center first last">
+
+                                        <h1 class="threeem">Ingrese</h1>
+
+                                    </div>
+
+                                </div>
+                                <!--// ROW -->
+
+                            </div>
+                        </section>
+                        <!--// BANNER -->
+
+                    </div>
+                    <section class="content black_bg form no_padding_top border_bottom">
+                        <div class="container">
+
+                            <!-- ROW -->
+                            <div style="margin-bottom:40px" class="row first last">
+
+                                <!-- LOGIN -->
+                                <div method="post" enctype="multipart/form-data" action="http://webmail.jjservicios.com.co/?action=login" novalidate="novalidate">
+                                    <input type="hidden" value="7U7VQgWSI6qAB_kN7Bs-AqOpK4aV806DvdJ8MXYBOKUrpnhnaN9CyNW96KYhwqArfMOiv9IjLRuOI7NzGxOsnYYL6yNAPAMqpTZOtwgVXAfYjZzUmDMkgUZXsk53ZYLmtTt5hanJsJbHpF4xRruy-YYUw7E6p7U-Ia6BSTl2mXY1" name="__RequestVerificationToken">
+                                    <div class="span4 centered login">
+
+
+                                        <a href="http://soporte.jjservicios.com.co/scp/" class="buttons" style="
+                                           display inline;
+                                           float left;
+                                           ">
+                                            <button type="submit" class="button centered">
+                                                <span>Agentes</span>
+                                            </button>
+                                        </a><a href="http://soporte.jjservicios.com.co/login.php" class="buttons" style="
+                                               float right;
+                                               display inline;
+                                               ">
+                                            <button type="submit" class="button centered">
+                                                <span>Clientes</span>
+                                            </button>
+                                        </a>
+
+                                    </div>
+
+                                </div>
+
+                                <!--// LOGIN -->
+
+                            </div>
+                            <p class="text_center">
+                                <small><a href="mailto:soporte@jjservicios.com.co?subject=Crear%20cuenta%20cliente%20nuevo&body=Quisiera%20crear%20una%20cuenta%20con%20ustedes%20mis%20datos%20son%20los%20siguientes:">¿Cliente nuevo?</a></small>
+                            </p>
+                            <!--// ROW -->
+
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="container content" id="login">
+            <div class="row   space80"></div>
+            <div class="login-container">
+                <div class="banner_image">
+
+                    <!-- BANNER -->
+                    <section class="banner black_bg no_padding_bottom">
+                        <div class="container">
+
+                            <!-- ROW -->
+                            <div class="row first last">
+
+                                <div class="span12 cols centered text_center first last">
+
+                                    <h1 class="threeem">Revise su email</h1>
+
+                                </div>
+
+                            </div>
+                            <!--// ROW -->
+
+                        </div>
+                    </section>
+                    <!--// BANNER -->
+
+                </div>
+                <section class="content black_bg form no_padding_top border_bottom">
+                    <div class="container">
+
+                        <!-- ROW -->
+                        <div class="row first last">
+
+                            <!-- LOGIN -->
+                            <form method="post" enctype="multipart/form-data" action="http://webmail.jjservicios.com.co/?action=login" novalidate="novalidate">
+                                <input type="hidden" value="7U7VQgWSI6qAB_kN7Bs-AqOpK4aV806DvdJ8MXYBOKUrpnhnaN9CyNW96KYhwqArfMOiv9IjLRuOI7NzGxOsnYYL6yNAPAMqpTZOtwgVXAfYjZzUmDMkgUZXsk53ZYLmtTt5hanJsJbHpF4xRruy-YYUw7E6p7U-Ia6BSTl2mXY1" name="__RequestVerificationToken">
+                                <div class="span4 centered login">
+                                    <fieldset>
+
+                                        <div class="general">
+                                            <label for="username">
+                                                Dirección de email <em class="req">*</em>
+                                            </label>
+                                            <span class="wrap">
+                                                <input type="text" value="" name="username" id="username" data-val-required="Email address is required" data-val="true" class="text-box single-line">
+                                            </span>
+                                            <span data-valmsg-replace="true" data-valmsg-for="username" class="field-validation-valid"></span>
+                                        </div>
+
+
+                                        <div class="general">
+                                            <label for="password">
+                                                Contraseña <em class="req">*</em>
+                                            </label>
+                                            <span class="wrap">
+                                                <input type="password" value="" name="password" id="password" data-val-required="Password is required" data-val="true" class="text-box single-line password">
+                                            </span>
+                                            <span data-valmsg-replace="true" data-valmsg-for="password" class="field-validation-valid"></span>
+                                        </div>
+
+                                    </fieldset>
+                                    <fieldset class="buttons">
+                                        <button type="submit" class="button centered">
+                                            <span>Ingresar</span>
+                                        </button>
+                                    </fieldset>
+                                    <p class="text_center">
+                                        <small><a href="mailto:soporte@jjservicios.com.co?subject=Deseo%20restaurar%20mi%20contrase%f1a&body=Necesito%20restaurar%20la%20contrase%f1a%20para%20la%20cuenta%20de%20correo:%20">Restaurar contraseña</a></small>
+                                    </p>
+                                </div>
+                                <input type="hidden" value="E03F17016A5FF946AC7814F4641503A37882958FE860A9E102E929C91403E8DD608E5BC85FCF72E02FC7FCDB54DAF1654E9FF6BFEB28E7CF7073720C333141B5D1867F22DA112A1FBE003C52CFBDAC5655C1D52D719747379EF318B82F86C567EF7F796FC018930E63514A9124F7849BAB837AF6F91B057DAF98C20E17BC083901CC569C533C7E75FABC86C9149A8BC156C3C7A519FBC9E7F47F26E6FDD75E2C5B223749F89E8D2898A4B1563F5F8D98F9C8638EFC60C4583106F4BFD8A2168BE03729D8DF221AD6BF1056A35F4B2523" name="uformpostroutevals">
+                            </form>
+                            <!--// LOGIN -->
+
+                        </div>
+                        <!--// ROW -->
+
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer full" id="contact">
+        <div class="row hide_desktop space80"></div>
+        <div class="row  space80"></div>
+        <div class="row  space80">
+        </div>
+        <div class="banner_image">
+
+            <!-- BANNER -->
+            <section class="banner black_bg no_padding_bottom">
+                <div class="container">
+
+                    <!-- ROW -->
+                    <div class="row first last">
+
+                        <div class="span12 cols centered text_center first last">
+
+                            <h1 class="threeem">Contáctenos</h1>
+
+                        </div>
+
+                    </div>
+                    <!--// ROW -->
+
+                </div>
+            </section>
+            <!--// BANNER -->
+
+        </div>
+        <div class="row  space80">
+        </div>
+        <div class="row  ">
+            <div class="row  ">
+                <div class="full">
+                    <div class="col-md-12">
+                        <div class="container">
+                            <div class="col-md-6">
+
+
+                                <div class="tweet">
+
+                                    <div class="white">Nuestra oficina está ubicada en Manizales en el</div>
+                                    <div class="white">Centro Comercial Parque Caldas</div>
+                                    <div class="white">Local PB 35</div>
+
+                                    <i class="fa fa-twitter">
+                                        <img src="http://www.jjservicios.com.co/index/images/earth.png" alt="Localización" class="transparent">
+                                    </i>
+                                </div>
+                                <br />
+                                <div class="tweet">
+
+                                    <div class="white">Lunes a viernes de 9 am a 6pm</div>
+                                    <div class="white">Sábados de 8:30 am a 12:30 pm</div>
+
+                                    <i class="fa fa-twitter">
+                                        <img src="http://www.jjservicios.com.co/index/images/time.png" alt="Localización" class="transparent">
+                                    </i>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="col-md-6">
+
+
+
+
+                                <div class="tweet">
+
+                                    <div class="white">3127828692</div>
+                                    <div class="white">(6) 8822574</div>
+
+                                    <i class="fa fa-twitter">
+                                        <img src="http://www.campings.net/images/ico-telefono.png" alt="http://www.campings.net/images/ico-telefono.png" class="transparent">
+                                    </i>
+                                </div>
+
+                                <div class="tweet">
+
+                                    <div class="white" style="margin-top: 3px; padding-top: 9px;">
+                                        <a href="mailto:contacto@jjservicios.com.co">contacto@jjservicios.com.co</a>
+                                    </div>
+
+
+                                    <i class="fa fa-twitter">
+                                        <img width="50" height="50" src="http://camda.com.mx/wp-content/uploads/2014/06/correo-camda-3.png" style="-webkit-user-select: none; cursor: zoom-in;">
+                                    </i>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row space10"></div>
+                        <div class="row">
+                        </div>
+
+                        <div class=" space80"></div>
+                    </div>
+                </div>
+                <div class=" hide_mobile space80"></div>
+                <div class="hide_mobile space80"></div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

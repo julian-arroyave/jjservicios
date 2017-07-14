@@ -2,27 +2,27 @@
 <h1>Empleados</h1>
 @(Html.Kendo().Grid<EmployeeViewModel>()
       .Name("grid")
-      .HtmlAttributes(new { style = "height:550px;" })
+      .HtmlAttributes(new { style = "height:350px;" })
       .Columns(columns =>
       {
 
-          columns.Bound(c => c.Identification).Title("Identificación");
-          columns.Bound(c => c.Name).Title("Nombre");
-          columns.Bound(c => c.FinancialNumber).Title("No Cuenta");
-          columns.Bound(c => c.Mobile).Title("Celular");
-          columns.Bound(c => c.OtherPhone).Title("Otro teléfono");
-          columns.Bound(c => c.WhatsApp).Title("WhatsApp");
-          columns.Bound(c => c.Skype);
-          columns.Bound(c => c.CorporateEmail).Title("Email corporativo");
-          columns.Bound(c => c.OtherEmail).Title("Otro email"); ;
-          columns.Bound(c => c.ResidenceCity).Title("Ciudad de residencia");
-          columns.Bound(c => c.EmployeePosition).Title("Cargo").Sortable(false).Filterable(filterable => filterable.Extra(false).UI("employeePositionFilter").Operators(operators => operators.ForString(str => str.Clear().Contains("Contiene"))));
-          columns.Bound(c => c.EmployeePositionId);
-          columns.Bound(c => c.FinancialAccount).Title("Entidad financiera").Sortable(false).Filterable(filterable => filterable.Extra(false).UI("financialAccountFilter").Operators(operators => operators.ForString(str => str.Clear().Contains("Contiene"))));
-          columns.Bound(c => c.FinancialAccountId);
-          columns.Bound(c => c.Address).Title("Dirección"); ;
-          columns.Bound(c => c.Active).Visible(false); ;
-          columns.Bound(c => c.Birthdate).Width(90).Title("Cumpleaños").ClientTemplate("#=kendo.toString(Birthdate,'yyyy-MM-dd')#").Filterable(filterable => filterable.Extra(true).Operators(operators => operators.ForDate(str => str.Clear()
+          columns.Bound(c => c.Identification).Title("Identificación").Width(100);
+          columns.Bound(c => c.Name).Title("Nombre").Width(200); ;
+          columns.Bound(c => c.FinancialNumber).Title("No Cuenta").Width(150);
+          columns.Bound(c => c.Mobile).Title("Celular").Width(120);
+          columns.Bound(c => c.OtherPhone).Title("Otro teléfono").Width(120);
+          columns.Bound(c => c.WhatsApp).Title("WhatsApp").Width(120);
+          columns.Bound(c => c.Skype).Width(120);
+          columns.Bound(c => c.CorporateEmail).Title("Email corporativo").Width(250);
+          columns.Bound(c => c.OtherEmail).Title("Otro email").Width(250);
+          columns.Bound(c => c.ResidenceCity).Width(120).Title("Ciudad de residencia").Width(120);
+          columns.Bound(c => c.EmployeePosition).Width(120).Title("Cargo").Sortable(false).Filterable(filterable => filterable.Extra(false).UI("employeePositionFilter").Operators(operators => operators.ForString(str => str.Clear().Contains("Contiene"))));
+          columns.Bound(c => c.EmployeePositionId).Width(120);
+          columns.Bound(c => c.FinancialAccount).Width(120).Title("Entidad financiera").Sortable(false).Filterable(filterable => filterable.Extra(false).UI("financialAccountFilter").Operators(operators => operators.ForString(str => str.Clear().Contains("Contiene"))));
+          columns.Bound(c => c.FinancialAccountId).Width(120);
+          columns.Bound(c => c.Address).Title("Dirección").Width(120);
+          columns.Bound(c => c.Active).Visible(false).Width(120);
+          columns.Bound(c => c.Birthdate).Width(150).Title("Cumpleaños").ClientTemplate("#=kendo.toString(Birthdate,'yyyy-MM-dd')#").Filterable(filterable => filterable.Extra(true).Operators(operators => operators.ForDate(str => str.Clear()
           .IsGreaterThanOrEqualTo("Mayor o igual a")
           .IsLessThanOrEqualTo("Menor o igual a"))));
           columns.Bound(c => c.CreatedDate).Width(90).Title("Fecha de creación").ClientTemplate("#=kendo.toString(CreatedDate,'yyyy-MM-dd')#");
@@ -39,12 +39,13 @@
           toolbar.Excel().Text("Exportar a excel");
       })
       .ColumnMenu()
-      .Editable(editable => editable.Mode(GridEditMode.PopUp))
+      .Editable(editable => editable.Mode(GridEditMode.InLine))
       .Sortable(sortable => {
           sortable.SortMode(GridSortMode.SingleColumn);
       })
       .Filterable()
       .Scrollable()
+      .Pageable()
       .Events(events =>
       {
           events.SaveChanges("onSaveChanges");
@@ -67,6 +68,7 @@
           .Create(create => create.Action("Employee_Create", "Employee"))
           .Update(update => update.Action("Employee_Update", "Employee"))
           .Destroy(destroy => destroy.Action("Employee_Destroy", "Employee"))
+          .PageSize(5)
       )
        .Resizable(resize => resize.Columns(true))
 )

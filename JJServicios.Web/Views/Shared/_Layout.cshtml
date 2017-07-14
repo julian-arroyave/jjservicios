@@ -34,14 +34,14 @@
 <body>
 
 <ul id="menu">
-    <li>@Html.ActionLink("J&J Admin", "Index", "Home", new { bankAccountId = "2" }, null)</li>
+    <li>@Html.ActionLink("J&J Admin", "Index", "Summary", new { bankAccountId = "2" }, null)</li>
     <li>
         Movimientos
         <ul>
             <li>
                 Cuenta corporativa
                 <ul>
-                    <li>@Html.ActionLink("Resumen", "Index", "Home", new { bankAccountId = "1" }, null)</li>
+                    <li>@Html.ActionLink("Resumen", "Index", "Summary", new { bankAccountId = "1" }, null)</li>
                     <li>@Html.ActionLink("Entradas", "Index", "Income", new {bankAccountId = "1"}, null)</li>
                     <li>
                         Salidas
@@ -55,7 +55,7 @@
             <li>
                 Cuenta auxiliar
                 <ul>
-                    <li>@Html.ActionLink("Resumen", "Index", "Home", new { bankAccountId = "2" }, null)</li>
+                    <li>@Html.ActionLink("Resumen", "Index", "Summary", new { bankAccountId = "2" }, null)</li>
                     <li>@Html.ActionLink("Entradas", "Index", "Income", new {bankAccountId = "2"}, null)</li>
                     <li>
                         Salidas

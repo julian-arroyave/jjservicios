@@ -42,7 +42,7 @@
       .DataSource(dataSource => dataSource
           .Ajax()
           .Sort(sort => sort.Add("MovementDate").Descending())
-          .Read(read => read.Action("Agent_Read", "Home", new { bankAccountId }))
+          .Read(read => read.Action("Agent_Read", "Summary", new { bankAccountId }))
           .PageSize(20)
       )
       )
